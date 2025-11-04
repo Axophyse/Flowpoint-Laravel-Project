@@ -1,0 +1,45 @@
+.auth-body {
+    margin: 0;
+    background: #0F3546;
+    height: 100vh;
+    color: #fff;
+}
+
+.auth-sidebar {
+    flex: 25%;
+    background: linear-gradient(135deg, #215c71, #0c2f3b);
+}
+
+.auth-wrapper {
+    display: flex;
+    height: 100%;
+}
+
+.auth-branding {
+    flex: 65%;
+    background: linear-gradient(135deg, #00151b, #0e3545);
+    color: #ffffff;
+}
+
+.brand-title {
+    font-size: 3rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    filter: drop-shadow(5px 5px 5px rgb(20, 20, 20));
+}
+
+input {
+    background: rgba(255, 255, 255, 0.95);
+    border: none !important;
+    border-radius: 7px !important;
+}
+
+button {
+    border-radius: 7px !important;
+}
+
+.footer-small {
+    font-size: 0.75rem;
+    padding: 8px;
+    opacity: 0.6;
+}

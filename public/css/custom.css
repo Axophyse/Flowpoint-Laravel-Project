@@ -1,0 +1,119 @@
+/* DASHBOARD Page Layout */
+body {
+    background: #012a3a;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 225px;
+    background-color: #3c8199;
+    padding-top: 0px;
+    position: fixed;
+    top: 0; bottom: 0; left: 0;
+}
+
+.sidebar .brandLogo {
+    width: auto;
+    padding: 20px;
+}
+
+    .sidebar .sidebar-buttons {
+        margin-top: 0px;
+    }
+
+.sidebar a {
+    display: block;
+    width: 100%;
+    align-self: center;
+    color: #ffffff;
+    padding: 10px;
+    text-decoration: none;
+}
+
+.sidebar a.active,
+.sidebar a:hover {
+    background-color: #073f5b;
+}
+
+.main-content {
+    margin-left: 225px;
+    margin-top: 50px;
+    margin-bottom: 0px;
+    padding: 0px;
+    height: calc(100vh - 50px);
+    overflow-y: auto;
+}
+
+.topbar {
+    height: 50px;
+    position: fixed;
+    top: 0; left: 225px; right: 0;
+    background-color: #3c8199;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0px 25px;
+}
+
+.body-footer {
+    position: fixed;
+    bottom: 0; left: 225px; right: 0;
+    text-align: left;
+    font-size: 0.8rem;
+    opacity: 25%;
+}
+
+.dashboard-container {
+    padding: 25px;
+    color: #f0f4f8;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.dashboard-header h1 {
+    margin-bottom: 20px;
+}
+
+.dashboard-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    flex-wrap: space-between;
+}
+
+.dashboard-card {
+    flex: 1 1 calc(25% - 20px);
+    min-width: 200px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #1e4f5b;
+    color: #fff;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.dashboard-card h5 {
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.dashboard-card p {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.dashboard-chart {
+    margin-top: 20px;
+    background-color: #1e4f5b;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.dailysales {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+}
+        
