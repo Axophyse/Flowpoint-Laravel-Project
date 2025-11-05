@@ -24,6 +24,9 @@ class HomeController extends Controller
     public function display()
     {
         $currentMonth = Carbon::now()->format('F Y');
+        $currentYear = Carbon::now()->year;
+
+        $daysInMonth = Carbon::now()->daysInMonth;
 
         $totalProducts = Product::count();
         $totalSales = Sale::sum('total_amount');
@@ -43,7 +46,7 @@ class HomeController extends Controller
             ->count('total_amount');
 
         // Daily Sales for Current Month
-        $dailySales = Sale::select(
+        $salesData = Sale::select(
             DB::raw("CAST(strftime('%d', sale_date) AS INTEGER) as day"),
             DB::raw("SUM(total_amount) as total")
         )
@@ -51,6 +54,12 @@ class HomeController extends Controller
             ->groupBy('day')
             ->orderBy('day')
             ->pluck('total', 'day');
+
+        $dailySales = [];
+        for ($day = 1; $day <= $daysInMonth; $day++) { {
+                $dailySales[$day] = $salesData[$day] ?? 0;
+            }
+        }
 
         return view('dashboard', compact(
             'totalProducts',

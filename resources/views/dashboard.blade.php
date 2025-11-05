@@ -6,7 +6,7 @@
 
 <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
 
-<div class="dashboard-container">
+<div class="main-body">
 
     <!-- Dashboard Header -->
     <div class="dashboard-header">
@@ -45,6 +45,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
     const dailySalesData = @json($dailySales);
     const labels = Object.keys(dailySalesData).map(day => `${day}`);
@@ -59,15 +60,40 @@
                 label: 'Sales ($)',
                 data: data,
                 borderColor: '#00d1b2',
-                backgroundColor: 'rgba(0, 209, 178, 0.2)',
-                fill: true,
+                backgroundColor: 'rgba(0, 209, 178, 0.4)',
                 borderWidth: 2
             }]
         },
         options: {
             responsive: true,
             scales: {
-                y: { beginAtZero: true }
+                x: {
+                    ticks: {
+                        color: '#ffffff' // x-axis labels
+                    },
+                    grid: {
+                        color: 'rgba(255,255,255,0.1)' // subtle grid lines
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: '#ffffff' // y-axis labels
+                    },
+                    grid: {
+                        color: 'rgba(255,255,255,0.1)'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#ffffff' // legend text
+                    }
+                },
+                title: {
+                    color: '#ffffff'
+                }
             }
         }
     });
