@@ -1,0 +1,595 @@
+/* DASHBOARD Page Layout */
+body {
+    background: #012a3a;
+    color: white;
+}
+
+.main-content {
+    margin-left: 225px;
+    margin-top: 50px;
+    height: calc(100vh - 50px);
+}
+
+.main-body {
+    padding: 15px;
+    gap: 15px;
+    height: calc(100vh - 50px);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+/* UNIVERSAL ELEMENTS */
+.button-primary {
+    background-color: #3c8199;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.button-secondary {
+    background-color: #3c8199;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.button-primary:hover {
+    background-color: #1e4f5b;
+}
+
+.button {
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: white;
+    text-decoration: none;
+    margin: 0 2px;
+    transition: 0.3s;
+}
+
+.button-view { background-color: #3498db; }
+.button-edit { background-color: #f1c40f; color: black; }
+.button-delete { background-color: #e74c3c; }
+.button:hover { opacity: 0.8; }
+
+.text-muted { color: #ccc; }
+
+/* ALERTS */
+.inventory-alert {
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.inventory-alert.success {
+    background-color: #1e4f5b;
+    color: #00ffb2;
+}
+
+/* FORM STYLES */
+.inventory-form-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.inventory-form-main {
+    flex: 2 1 600px;
+    min-width: 300px;
+}
+
+.inventory-form-sidebar {
+    flex: 1 1 300px;
+    min-width: 250px;
+}
+
+.inventory-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.form-group {
+    flex: 1 1 calc(50% - 20px);
+    min-width: 200px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #ffffff;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #00d1b2;
+    background-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 2px rgba(0, 209, 178, 0.2);
+}
+
+.form-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.form-input-error {
+    border-color: #e74c3c;
+    background-color: rgba(231, 76, 60, 0.1);
+}
+
+.form-error {
+    color: #e74c3c;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    display: block;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+/* Dropdown Styling - FIXED */
+.form-input select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2300d1b2' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-color: #1e4f5b;
+    padding-right: 40px;
+    color: #ffffff; /* White text when closed */
+}
+
+/* REMOVE the option styling - let the browser use defaults */
+.form-input select option {
+    /* Don't force colors - let browser use default black text on white */
+}
+
+/* Keep the rest of your dropdown styles */
+.form-input select:focus {
+    background-color: #2a6474;
+    border-color: #00d1b2;
+}
+
+.form-input select::-ms-expand {
+    display: none;
+}
+
+/* Textarea specific styling */
+.form-input textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Date input specific styling */
+.form-input[type="date"] {
+    padding-right: 15px;
+}
+
+/* Number input specific styling */
+.form-input[type="number"] {
+    padding-right: 15px;
+}
+
+/* INVENTORY PAGE STYLES */
+.inventory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.inventory-header h1 {
+    margin: 0;
+}
+
+.inventory-card {
+    background-color: #1e4f5b;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.inventory-card-header h5 {
+    margin-bottom: 10px;
+}
+
+.inventory-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.inventory-table th,
+.inventory-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    text-align: left;
+}
+
+.inventory-table th {
+    background-color: rgba(255,255,255,0.05);
+    font-weight: bold;
+}
+
+.inventory-table tr:hover {
+    background-color: rgba(255,255,255,0.05);
+}
+
+.inventory-actions {
+    display: flex;
+    align-items: center;
+}
+
+.inline-form {
+    display: inline;
+}
+
+.inventory-pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* INVENTORY FORM STYLES */
+.inventory-form-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.inventory-form-main {
+    flex: 2 1 600px;
+    min-width: 300px;
+}
+
+.inventory-form-sidebar {
+    flex: 1 1 300px;
+    min-width: 250px;
+}
+
+.inventory-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.form-group {
+    flex: 1 1 calc(50% - 20px);
+    min-width: 200px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #ffffff;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #00d1b2;
+    background-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 2px rgba(0, 209, 178, 0.2);
+}
+
+.form-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.form-input-error {
+    border-color: #e74c3c;
+    background-color: rgba(231, 76, 60, 0.1);
+}
+
+.form-error {
+    color: #e74c3c;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    display: block;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+/* Dropdown Styling */
+.form-input select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2300d1b2' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-color: #1e4f5b;
+    padding-right: 40px;
+    color: #ffffff;
+}
+
+.form-input select:focus {
+    background-color: #2a6474;
+    border-color: #00d1b2;
+}
+
+.form-input select::-ms-expand {
+    display: none;
+}
+
+.form-input textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-input[type="date"] {
+    padding-right: 15px;
+}
+
+.form-input[type="number"] {
+    padding-right: 15px;
+}
+
+/* INVENTORY ALERTS */
+.inventory-alert {
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.inventory-alert.success {
+    background-color: #1e4f5b;
+    color: #00ffb2;
+}
+
+/* PRODUCT SHOW PAGE STYLES */
+.product-details-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.product-details-main {
+    flex: 2 1 600px;
+    min-width: 300px;
+}
+
+.product-details-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.product-info-grid {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.product-info-section {
+    flex: 1 1 calc(50% - 20px);
+    min-width: 250px;
+}
+
+.product-info-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.product-info-table th,
+.product-info-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: left;
+}
+
+.product-info-table th {
+    background-color: rgba(255, 255, 255, 0.05);
+    font-weight: bold;
+    color: #ffffff;
+    width: 120px;
+}
+
+.product-info-table tr:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.product-description {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.product-description h6 {
+    margin-bottom: 10px;
+    color: #ffffff;
+    font-size: 1rem;
+}
+
+.description-text {
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.product-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.statistics-display {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.statistics-display h3 {
+    color: #00d1b2;
+    font-size: 2rem;
+    margin: 0 0 10px 0;
+}
+
+.statistics-label {
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* EDIT PAGE STYLES */
+.product-info-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.product-info-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.product-info-list li:last-child {
+    border-bottom: none;
+}
+
+.product-info-list strong {
+    color: #ffffff;
+    font-weight: 600;
+    display: inline-block;
+    width: 100px;
+}
+
+/* Ensure sidebar has proper gap */
+.inventory-form-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Tips List */
+.tips-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tips-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.tips-list li:last-child {
+    border-bottom: none;
+}
+
+.tips-list li::before {
+    content: "•";
+    color: #00d1b2;
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+}
+
+/* UNIVERSAL SORTING STYLES - Can be used on any table */
+.sorting-info {
+    background-color: rgba(0, 209, 178, 0.1);
+    border: 1px solid rgba(0, 209, 178, 0.3);
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: #00d1b2;
+    font-size: 0.9rem;
+}
+
+.sortable {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    transition: background-color 0.3s;
+}
+
+.sortable:hover {
+    background-color: rgba(0, 209, 178, 0.2) !important;
+}
+
+.sort-indicator {
+    margin-left: 5px;
+    font-size: 0.8rem;
+    opacity: 0.6;
+}
+
+.sort-asc {
+    background-color: rgba(0, 209, 178, 0.3) !important;
+}
+
+.sort-desc {
+    background-color: rgba(0, 209, 178, 0.3) !important;
+}
+
+.sort-asc .sort-indicator,
+.sort-desc .sort-indicator {
+    opacity: 1;
+    font-weight: bold;
+}
+
+/* Universal sorting JavaScript - can be used on any table */
+.table-sortable th.sortable {
+    cursor: pointer;
+}

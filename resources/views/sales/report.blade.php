@@ -4,7 +4,7 @@
 
 @section('content')
 
-<link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+<link rel="stylesheet" href="{{ asset('css/sales.css') }}">
 
 <div class="main-body">
 
@@ -18,19 +18,19 @@
 
     <!-- Summary Cards -->
     <div class="sales-report-cards">
-        <div class="sales-report-card">
+        <div class="sales-card">
             <h5>Total Revenue</h5>
             <p>${{ number_format($totalRevenue, 2) }}</p>
         </div>
-        <div class="sales-report-card">
+        <div class="sales-card">
             <h5>Items Sold</h5>
             <p>{{ number_format($totalItemsSold) }}</p>
         </div>
-        <div class="sales-report-card">
+        <div class="sales-card">
             <h5>Avg Transaction</h5>
             <p>${{ number_format($averageTransaction, 2) }}</p>
         </div>
-        <div class="sales-report-card">
+        <div class="sales-card">
             <h5>Total Transactions</h5>
             <p>{{ number_format($salesByPayment->sum('transactions')) }}</p>
         </div>
@@ -41,7 +41,7 @@
         <!-- Daily Sales Chart - Now matches dashboard style -->
         <div class="sales-report-chart-large">
             <h5>Daily Sales ({{ \Carbon\Carbon::now()->format('F') }})</h5>
-            <canvas id="dailySalesChart" width="400" height="100"></canvas>
+            <canvas id="dailySalesChart" width="auto" height="auto"></canvas>
         </div>
 
         <!-- Sales by Payment Method -->

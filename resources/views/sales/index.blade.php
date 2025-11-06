@@ -4,7 +4,7 @@
 
 @section('content')
 
-<link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+<link rel="stylesheet" href="{{ asset('css/sales.css') }}">
 
 <div class="main-body">
 
@@ -90,12 +90,12 @@
                         <td><strong>{{ $sale->sale_number }}</strong></td>
                         <td>
                             <strong>{{ $sale->product->name }}</strong><br>
-                            <small class="text-muted">{{ $sale->product->category }}</small>
+                            <small>{{ $sale->product->category }}</small>
                         </td>
                         <td>
                             {{ $sale->customer_name }}
                             @if($sale->customer_email)
-                                <br><small class="text-muted">{{ $sale->customer_email }}</small>
+                                <br><small>{{ $sale->customer_email }}</small>
                             @endif
                         </td>
                         <td>{{ $sale->quantity_sold }}</td>

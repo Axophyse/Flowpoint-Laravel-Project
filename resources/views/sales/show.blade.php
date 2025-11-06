@@ -3,28 +3,30 @@
 @section('title', 'Sale Details - ' . $sale->sale_number)
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1>Sale Details</h1>
-                <a href="{{ route('sales.index') }}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Back to Sales
-                </a>
-            </div>
-        </div>
+
+<link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+<link rel="stylesheet" href="{{ asset('css/sales.css') }}">
+
+<div class="main-body">
+
+    <!-- Sale Details Header -->
+    <div class="sales-header">
+        <h1>Sale Details</h1>
+        <a href="{{ route('sales.index') }}" class="button-secondary">
+            ← Back to Sales
+        </a>
     </div>
 
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">Sale Information</h5>
+    <div class="sales-details-container">
+        <div class="sales-details-main">
+            <div class="sales-card">
+                <div class="sales-card-header">
+                    <h5>Sale Information</h5>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <table class="table table-bordered">
+                <div class="sales-card-body">
+                    <div class="sale-info-grid">
+                        <div class="sale-info-section">
+                            <table class="sale-info-table">
                                 <tr>
                                     <th>Sale Number:</th>
                                     <td>{{ $sale->sale_number }}</td>
@@ -47,8 +49,8 @@
                                 </tr>
                             </table>
                         </div>
-                        <div class="col-md-6">
-                            <table class="table table-bordered">
+                        <div class="sale-info-section">
+                            <table class="sale-info-table">
                                 <tr>
                                     <th>Total Amount:</th>
                                     <td><strong>${{ number_format($sale->total_amount, 2) }}</strong></td>
@@ -56,7 +58,7 @@
                                 <tr>
                                     <th>Payment Method:</th>
                                     <td>
-                                        <span class="badge bg-{{ $sale->payment_method_class }}">
+                                        <span class="payment-badge payment-{{ $sale->payment_method }}">
                                             {{ ucfirst($sale->payment_method) }}
                                         </span>
                                     </td>
@@ -64,7 +66,7 @@
                                 <tr>
                                     <th>Status:</th>
                                     <td>
-                                        <span class="badge bg-{{ $sale->status_class }}">
+                                        <span class="status-badge status-{{ $sale->status }}">
                                             {{ ucfirst($sale->status) }}
                                         </span>
                                     </td>
@@ -81,35 +83,29 @@
                         </div>
                     </div>
 
-                    <div class="row mt-3">
-                        <div class="col-12">
-                            <h6>Customer Information</h6>
-                            <table class="table table-bordered">
-                                <tr>
-                                    <th>Customer Name:</th>
-                                    <td>{{ $sale->customer_name }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Customer Email:</th>
-                                    <td>{{ $sale->customer_email ?? 'N/A' }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Customer Phone:</th>
-                                    <td>{{ $sale->customer_phone ?? 'N/A' }}</td>
-                                </tr>
-                            </table>
-                        </div>
+                    <div class="customer-info-section">
+                        <h6>Customer Information</h6>
+                        <table class="sale-info-table">
+                            <tr>
+                                <th>Customer Name:</th>
+                                <td>{{ $sale->customer_name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Customer Email:</th>
+                                <td>{{ $sale->customer_email ?? 'N/A' }}</td>
+                            </tr>
+                            <tr>
+                                <th>Customer Phone:</th>
+                                <td>{{ $sale->customer_phone ?? 'N/A' }}</td>
+                            </tr>
+                        </table>
                     </div>
 
                     @if($sale->notes)
-                    <div class="row mt-3">
-                        <div class="col-12">
-                            <h6>Notes</h6>
-                            <div class="card">
-                                <div class="card-body">
-                                    {{ $sale->notes }}
-                                </div>
-                            </div>
+                    <div class="notes-section">
+                        <h6>Notes</h6>
+                        <div class="notes-content">
+                            {{ $sale->notes }}
                         </div>
                     </div>
                     @endif
@@ -117,41 +113,44 @@
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">Actions</h5>
+        <div class="sales-details-sidebar">
+            <div class="action-card">
+                <div class="sales-card-header">
+                    <h5>Actions</h5>
                 </div>
-                <div class="card-body">
-                    <div class="d-grid gap-2">
-                        <a href="{{ route('sales.edit', $sale) }}" class="btn btn-warning">
-                            <i class="fas fa-edit"></i> Edit Sale
+                <div class="sales-card-body">
+                    <div class="action-buttons">
+                        <a href="{{ route('sales.edit', $sale) }}" class="button button-edit">
+                            Edit Sale
                         </a>
-                        <form action="{{ route('sales.destroy', $sale) }}" method="POST" class="d-grid">
+                        <form action="{{ route('sales.destroy', $sale) }}" method="POST" class="action-form">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this sale?')">
-                                <i class="fas fa-trash"></i> Delete Sale
+                            <button type="submit" class="button button-delete" onclick="return confirm('Are you sure you want to delete this sale?')">
+                                Delete Sale
                             </button>
                         </form>
                     </div>
                 </div>
             </div>
 
-            <div class="card mt-3">
-                <div class="card-header">
-                    <h5 class="card-title">Product Information</h5>
+            <div class="product-information-card">
+                <div class="sales-card-header">
+                    <h5>Product Information</h5>
                 </div>
-                <div class="card-body">
-                    <p><strong>Name:</strong> {{ $sale->product->name }}</p>
-                    <p><strong>Current Price:</strong> ${{ number_format($sale->product->price, 2) }}</p>
-                    <p><strong>Current Stock:</strong> {{ $sale->product->quantity }}</p>
-                    <p>
-                        <strong>Stock Status:</strong>
-                        <span class="badge bg-{{ $sale->product->stock_status_class }}">
-                            {{ $sale->product->stock_status }}
-                        </span>
-                    </p>
+                
+                <div class="sales-card-body">
+                    <div class="product-info-list">
+                        <p>Name: {{ $sale->product->name }}</p>
+                        <p>Current Price:</strong> ${{ number_format($sale->product->price, 2) }}</p>
+                        <p>Current Stock: {{ $sale->product->quantity }}</p>
+                        <p>
+                            Stock Status:
+                            <span class="status-badge status-{{ $sale->product->stock_status_class }}">
+                                {{ $sale->product->stock_status }}
+                            </span>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
