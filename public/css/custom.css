@@ -85,7 +85,7 @@ body {
 
 /* DASHBOARD SECTION */
 .dashboard-header h1 {
-    margin-bottom: 20px;
+    margin: 0px;
 }
 
 .dashboard-cards {
@@ -130,7 +130,7 @@ body {
 
 /* REPORTS SECTION */
 .reports-header h1 {
-    
+    margin: 0px;
 }
 
 .reports-cards {
