@@ -19,6 +19,16 @@ body {
     align-items: stretch;
 }
 
+.home-body {
+    padding: 15px;
+    gap: 15px;
+    height: calc(100vh - 50px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 /* UNIVERSAL ELEMENTS */
 .button-primary {
     background-color: #3c8199;
