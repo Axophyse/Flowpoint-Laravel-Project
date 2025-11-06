@@ -193,15 +193,27 @@ class SaleController extends Controller
      */
     public function report()
     {
-        // Daily sales for the last 30 days
-        $dailySales = Sale::select(
+        // Get current month and year
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+        $daysInMonth = Carbon::now()->daysInMonth;
+
+        // Get daily sales data
+        $dailySalesQuery = Sale::select(
             DB::raw("CAST(strftime('%d', sale_date) AS INTEGER) as day"),
             DB::raw("SUM(total_amount) as total")
         )
             ->whereRaw("strftime('%m', sale_date) = ?", [Carbon::now()->format('m')])
+            ->whereRaw("strftime('%Y', sale_date) = ?", [Carbon::now()->format('Y')])
             ->groupBy('day')
             ->orderBy('day')
             ->pluck('total', 'day');
+
+        // Create array with all days of the month, filling in 0 for days with no sales
+        $dailySales = [];
+        for ($day = 1; $day <= $daysInMonth; $day++) {
+            $dailySales["$day"] = $dailySalesQuery[$day] ?? 0;
+        }
 
         // Sales by product category
         $salesByCategory = Sale::join('products', 'sales.product_id', '=', 'products.id')

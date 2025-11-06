@@ -3,94 +3,105 @@
 @section('title', 'Products Data Table')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1>Products Data Table</h1>
-                <a href="{{ route('reports') }}" class="btn btn-secondary">Back to Reports</a>
-            </div>
-        </div>
+
+<link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+
+<div class="main-body">
+
+    <!-- Data Table Header -->
+    <div class="data-table-header">
+        <h1>Products Data Table</h1>
+        <a href="{{ route('reports') }}" class="button-secondary">Back to Reports</a>
     </div>
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">All Products</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover" id="productsTable">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Price</th>
-                                    <th>Quantity</th>
-                                    <th>Category</th>
-                                    <th>Total Value</th>
-                                    <th>Created Date</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($products as $product)
-                                <tr>
-                                    <td>{{ $product->id }}</td>
-                                    <td><strong>{{ $product->name }}</strong></td>
-                                    <td>${{ number_format($product->price, 2) }}</td>
-                                    <td>
-                                        <span class="badge {{ $product->quantity > 20 ? 'bg-success' : ($product->quantity > 10 ? 'bg-warning' : 'bg-danger') }}">
-                                            {{ $product->quantity }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-info">{{ $product->category }}</span>
-                                    </td>
-                                    <td>
-                                        <strong>${{ number_format($product->price * $product->quantity, 2) }}</strong>
-                                    </td>
-                                    <td>{{ $product->created_date->format('M d, Y') }}</td>
-                                    <td>
-                                        @if($product->quantity == 0)
-                                            <span class="badge bg-danger">Out of Stock</span>
-                                        @elseif($product->quantity < 10)
-                                            <span class="badge bg-warning">Low Stock</span>
-                                        @else
-                                            <span class="badge bg-success">In Stock</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th colspan="5" class="text-end">Total:</th>
-                                    <th>${{ number_format($products->sum(function($product) {
-                                        return $product->price * $product->quantity;
-                                    }), 2) }}</th>
-                                    <th colspan="2"></th>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-            </div>
+    <!-- Sorting Info -->
+    <div class="sorting-info">
+        <p>Click on any column header to sort. Click again to reverse order.</p>
+    </div>
+
+    <!-- Products Table -->
+    <div class="data-table-container">
+        <div class="data-table-header-inner">
+            <h5>All Products</h5>
+        </div>
+        <div class="data-table-wrapper">
+            <table class="data-table" id="productsTable">
+                <thead>
+                    <tr>
+                        <th class="sortable" data-sort="id">
+                            ID 
+                            <span class="sort-indicator">↕</span>
+                        </th>
+                        <th class="sortable" data-sort="name">
+                            Name 
+                            <span class="sort-indicator">↕</span>
+                        </th>
+                        <th class="sortable" data-sort="price">
+                            Price 
+                            <span class="sort-indicator">↕</span>
+                        </th>
+                        <th class="sortable" data-sort="quantity">
+                            Quantity 
+                            <span class="sort-indicator">↕</span>
+                        </th>
+                        <th class="sortable" data-sort="category">
+                            Category 
+                            <span class="sort-indicator">↕</span>
+                        </th>
+                        <th class="sortable" data-sort="total_value">
+                            Total Value 
+                            <span class="sort-indicator">↕</span>
+                        </th>
+                        <th class="sortable" data-sort="created_date">
+                            Created Date 
+                            <span class="sort-indicator">↕</span>
+                        </th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($products as $product)
+                    <tr>
+                        <td>{{ $product->id }}</td>
+                        <td><strong>{{ $product->name }}</strong></td>
+                        <td>${{ number_format($product->price, 2) }}</td>
+                        <td>
+                            <span class="quantity-badge {{ $product->quantity > 20 ? 'quantity-high' : ($product->quantity > 10 ? 'quantity-medium' : 'quantity-low') }}">
+                                {{ $product->quantity }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="category-badge">{{ $product->category }}</span>
+                        </td>
+                        <td>
+                            <strong>${{ number_format($product->price * $product->quantity, 2) }}</strong>
+                        </td>
+                        <td>{{ $product->created_date->format('M d, Y') }}</td>
+                        <td>
+                            @if($product->quantity == 0)
+                                <span class="status-badge status-out">Out of Stock</span>
+                            @elseif($product->quantity < 10)
+                                <span class="status-badge status-low">Low Stock</span>
+                            @else
+                                <span class="status-badge status-in">In Stock</span>
+                            @endif
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="5" class="text-end">Total:</th>
+                        <th>${{ number_format($products->sum(function($product) {
+                            return $product->price * $product->quantity;
+                        }), 2) }}</th>
+                        <th colspan="2"></th>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
     </div>
 </div>
+
+<script src="{{ asset('js/custom.js') }}"></script>
 @endsection
-
-@push('styles')
-<style>
-    .table th {
-        background-color: #f8f9fa;
-        font-weight: 600;
-    }
-
-    .badge {
-        font-size: 0.75em;
-    }
-</style>
-@endpush
