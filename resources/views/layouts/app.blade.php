@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Flowpoint')</title>
+    <title>@hasSection('title')@yield('title') | @endif{{ config('app.name', 'Stockwise') }}</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -18,7 +18,7 @@
     @auth
     <div class="sidebar">
 
-        <img src="{{ asset('images/zenfour-logo-white.svg') }}" class="brandLogo" alt="Logo" >
+        <img src="{{ asset('images/stockwise-logo-white.svg') }}" class="brandLogo" alt="{{ config('app.name') }} logo">
 
         <div class="sidebar-buttons">
             <a href="{{ route('dashboard') }}" class="{{ request()->is('dashboard') ? 'active' : '' }}">
@@ -73,7 +73,7 @@
     </main>
 
     <footer class="body-footer">
-        © {{ date('Y') }} ZenFour Flowpoint
+        © {{ date('Y') }} {{ config('app.name') }}
     </footer>
 
 </body>
