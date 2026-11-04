@@ -33,10 +33,11 @@
         <div class="about-members">
             <h3>Members:</h3>
             <ul>
+                <li>Pacayra, Kurt Vincent</li>
                 <li>Corpuz, Cedric</li>
                 <li>Berbano, Joshua</li>
-                <li>Mainit, Markavana</li>
-                <li>Sasil, Perlin</li>
+                <li>Esparaggo, Isaac</li>
+                <li>Tare, Joshua
             </ul>
         </div>
     </div>
