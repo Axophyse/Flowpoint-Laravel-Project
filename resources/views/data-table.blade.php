@@ -4,7 +4,6 @@
 
 @section('content')
 
-<link rel="stylesheet" href="{{ asset('css/sales.css') }}">
 
 <div class="main-body">
 
@@ -24,7 +23,7 @@
         <div class="data-table-header-inner">
             <h5>All Products</h5>
         </div>
-        <div class="data-table-wrapper">
+        <div class="data-table-wrapper" tabindex="0" role="region" aria-label="Products data table">
             <table class="data-table" id="productsTable">
                 <thead>
                     <tr>
@@ -60,11 +59,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($products as $product)
+                    @forelse($products as $product)
                     <tr>
                         <td>{{ $product->id }}</td>
                         <td><strong>{{ $product->name }}</strong></td>
-                        <td>${{ number_format($product->price, 2) }}</td>
+                        <td>₱{{ number_format($product->price, 2) }}</td>
                         <td>
                             <span class="quantity-badge {{ $product->quantity > 20 ? 'quantity-high' : ($product->quantity > 10 ? 'quantity-medium' : 'quantity-low') }}">
                                 {{ $product->quantity }}
@@ -74,7 +73,7 @@
                             <span class="category-badge">{{ $product->category }}</span>
                         </td>
                         <td>
-                            <strong>${{ number_format($product->price * $product->quantity, 2) }}</strong>
+                            <strong>₱{{ number_format($product->price * $product->quantity, 2) }}</strong>
                         </td>
                         <td>{{ $product->created_date->format('M d, Y') }}</td>
                         <td>
@@ -87,12 +86,16 @@
                             @endif
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="8" class="text-center text-muted py-4">No products found.</td>
+                    </tr>
+                    @endforelse
                 </tbody>
                 <tfoot>
                     <tr>
                         <th colspan="5" class="text-end">Total:</th>
-                        <th>${{ number_format($products->sum(function($product) {
+                        <th>₱{{ number_format($products->sum(function($product) {
                             return $product->price * $product->quantity;
                         }), 2) }}</th>
                         <th colspan="2"></th>
@@ -103,5 +106,5 @@
     </div>
 </div>
 
-<script src="{{ asset('js/custom.js') }}"></script>
+<script src="{{ asset('js/custom.js') }}?v=phase2"></script>
 @endsection

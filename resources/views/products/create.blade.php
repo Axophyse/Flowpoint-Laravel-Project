@@ -4,7 +4,7 @@
 
 @section('content')
 
-<link rel="stylesheet" href="{{ asset('css/inventory.css') }}">
+<link rel="stylesheet" href="{{ asset('css/inventory.css') }}?v=phase2">
 
 <div class="main-body">
 
@@ -53,7 +53,7 @@
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="price" class="form-label">Price ($) *</label>
+                                <label for="price" class="form-label">Price (₱) *</label>
                                 <input type="number" step="0.01" class="form-input @error('price') form-input-error @enderror"
                                     id="price" name="price" value="{{ old('price') }}" required>
                                 @error('price')
@@ -89,7 +89,7 @@
                         </div>
 
                         <div class="form-actions">
-                            <button type="submit" class="button-secondary">
+                            <button type="submit" class="button-primary">
                                 Create Product
                             </button>
                             <a href="{{ route('products.index') }}" class="button-secondary">Cancel</a>

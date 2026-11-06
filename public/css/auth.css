@@ -1,45 +1,56 @@
-.auth-body {
-    margin: 0;
-    background: #0F3546;
-    height: 100vh;
-    color: #fff;
-}
+/* ==========================================================================
+   Stockwise authentication pages (layouts/auth.blade.php)
+   Design tokens, form controls and buttons come from app.css (loaded first).
+   Everything here is scoped under .auth-body so it cannot leak elsewhere.
+   ========================================================================== */
 
-.auth-sidebar {
-    flex: 25%;
-    background: linear-gradient(135deg, #215c71, #0c2f3b);
-}
+.auth-body { margin: 0; min-height: 100vh; background: var(--sw-white); }
 
-.auth-wrapper {
+.auth-body .auth-wrapper { display: flex; min-height: 100vh; }
+
+/* left: brand panel */
+.auth-body .auth-branding {
+    flex: 1 1 55%;
     display: flex;
-    height: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    background: var(--sw-surface);
+    border-right: 1px solid var(--sw-border);
 }
+.auth-body .auth-branding img { display: block; width: min(440px, 80%); height: auto; }
 
-.auth-branding {
-    flex: 65%;
-    background: linear-gradient(135deg, #00151b, #0e3545);
-    color: #ffffff;
+/* right: form panel */
+.auth-body .auth-sidebar {
+    flex: 1 1 45%;
+    display: flex;
+    flex-direction: column;
+    padding: 32px 24px 0;
+    background: var(--sw-white);
 }
+.auth-body .auth-main { flex: 1 0 auto; display: flex; flex-direction: column; justify-content: center; }
 
-.brand-title {
-    font-size: 3rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    filter: drop-shadow(5px 5px 5px rgb(20, 20, 20));
-}
+.auth-body .auth-card { width: 100%; max-width: 420px; margin: 0 auto; }
+.auth-body .auth-title { margin: 0 0 6px; font-size: 1.625rem; line-height: 1.2; }
+.auth-body .auth-subtitle { margin: 0 0 24px; color: var(--sw-muted); }
+.auth-body .auth-card .form-label { font-weight: 500; }
+.auth-body .auth-card .btn { padding: .65rem 1rem; }
+.auth-body .auth-card .btn-link { padding: .35rem 0; font-weight: 500; }
+.auth-body .auth-alt { margin: 20px 0 0; text-align: center; color: var(--sw-muted); }
+.auth-body .auth-alt a { font-weight: 500; }
 
-input {
-    background: rgba(255, 255, 255, 0.95);
-    border: none !important;
-    border-radius: 7px !important;
-}
+.auth-body .footer-small { padding: 24px 0 20px; text-align: center; color: var(--sw-muted); font-size: .75rem; }
 
-button {
-    border-radius: 7px !important;
-}
-
-.footer-small {
-    font-size: 0.75rem;
-    padding: 8px;
-    opacity: 0.6;
+/* tablet / phone: stack, compact brand header on top */
+@media (max-width: 991.98px) {
+    .auth-body .auth-wrapper { flex-direction: column; }
+    .auth-body .auth-branding {
+        flex: 0 0 auto;
+        padding: 20px 24px;
+        border-right: 0;
+        border-bottom: 1px solid var(--sw-border);
+    }
+    .auth-body .auth-branding img { width: 220px; max-width: 70%; }
+    .auth-body .auth-sidebar { flex: 1 1 auto; padding: 28px 20px 0; }
+    .auth-body .auth-main { justify-content: flex-start; }
 }

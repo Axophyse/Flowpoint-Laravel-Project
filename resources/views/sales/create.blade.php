@@ -4,7 +4,7 @@
 
 @section('content')
 
-<link rel="stylesheet" href="{{ asset('css/sales.css') }}">
+<link rel="stylesheet" href="{{ asset('css/sales.css') }}?v=phase2">
 
 <div class="main-body">
 
@@ -37,7 +37,7 @@
                                         data-price="{{ $product->price }}"
                                         data-stock="{{ $product->quantity }}"
                                         {{ old('product_id') == $product->id ? 'selected' : '' }}>
-                                        {{ $product->name }} - ${{ number_format($product->price, 2) }} (Stock: {{ $product->quantity }})
+                                        {{ $product->name }} - ₱{{ number_format($product->price, 2) }} (Stock: {{ $product->quantity }})
                                     </option>
                                     @endforeach
                                 </select>
@@ -66,7 +66,7 @@
                                 <small class="form-hint" id="stockInfo">Available stock: 0</small>
                             </div>
                             <div class="form-group">
-                                <label for="unit_price" class="form-label">Unit Price ($) *</label>
+                                <label for="unit_price" class="form-label">Unit Price (₱) *</label>
                                 <input type="number" step="0.01" class="form-input @error('unit_price') form-input-error @enderror"
                                     id="unit_price" name="unit_price" value="{{ old('unit_price') }}" required>
                                 @error('unit_price')
@@ -75,7 +75,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Total Amount</label>
-                                <input type="text" class="form-input form-input-readonly" id="total_amount" readonly value="$0.00">
+                                <input type="text" class="form-input form-input-readonly" id="total_amount" readonly value="₱0.00">
                             </div>
                         </div>
 
@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const quantity = parseInt(quantityInput.value) || 0;
         const unitPrice = parseFloat(unitPriceInput.value) || 0;
         const total = quantity * unitPrice;
-        totalAmountInput.value = '$' + total.toFixed(2);
+        totalAmountInput.value = '₱' + total.toFixed(2);
         updateSummary();
     }
 
@@ -226,8 +226,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="summary-list">
                     <p><strong>Product:</strong> ${productName}</p>
                     <p><strong>Quantity:</strong> ${quantity}</p>
-                    <p><strong>Unit Price:</strong> $${unitPrice.toFixed(2)}</p>
-                    <p><strong>Total Amount:</strong> $${total.toFixed(2)}</p>
+                    <p><strong>Unit Price:</strong> ₱${unitPrice.toFixed(2)}</p>
+                    <p><strong>Total Amount:</strong> ₱${total.toFixed(2)}</p>
                 </div>
             `;
         } else {

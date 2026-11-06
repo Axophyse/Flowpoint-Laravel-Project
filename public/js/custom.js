@@ -2,9 +2,15 @@
 // TABLE SORTING FUNCTIONALITY
 // =============================================
 
+const NUMERIC_COLUMNS = ['id', 'price', 'quantity', 'total_value', 'quantity_sold', 'unit_price', 'total_amount'];
+const DATE_COLUMNS = ['created_date', 'sale_date'];
+
 function makeTableSortable(tableId) {
     const table = document.getElementById(tableId);
     if (!table) return;
+    // Never attach the click handlers twice to the same table.
+    if (table.dataset.sortReady === '1') return;
+    table.dataset.sortReady = '1';
     
     const headers = table.querySelectorAll('th.sortable');
     const tbody = table.querySelector('tbody');
@@ -46,13 +52,13 @@ function makeTableSortable(tableId) {
                 let aValue = aCell.textContent.trim();
                 let bValue = bCell.textContent.trim();
 
-                // Handle numeric values
-                if (column === 'id' || column === 'price' || column === 'quantity' || column === 'total_value') {
-                    aValue = parseFloat(aValue.replace(/[$,]/g, '')) || 0;
-                    bValue = parseFloat(bValue.replace(/[$,]/g, '')) || 0;
+                // Handle numeric values (currency symbols and thousands separators are stripped)
+                if (NUMERIC_COLUMNS.includes(column)) {
+                    aValue = parseFloat(aValue.replace(/[\u20B1$,]/g, '')) || 0;
+                    bValue = parseFloat(bValue.replace(/[\u20B1$,]/g, '')) || 0;
                 }
                 // Handle date values
-                else if (column === 'created_date') {
+                else if (DATE_COLUMNS.includes(column)) {
                     aValue = new Date(aValue);
                     bValue = new Date(bValue);
                 }
@@ -70,112 +76,41 @@ function makeTableSortable(tableId) {
 
 // =============================================
 // CHART INITIALIZATION FUNCTIONS
+// Colours/fonts come from chart-theme.js (window.StockwiseChart).
+// Charts are always created through StockwiseChart.create(), which destroys a
+// chart that is already attached to the canvas, so a repeated initialisation can
+// no longer throw "Canvas is already in use".
 // =============================================
 
 function initializeDashboardCharts() {
     // Daily Sales Chart from dashboard
     const dailySalesCtx = document.getElementById('dailySalesChart');
-    if (dailySalesCtx) {
+    if (dailySalesCtx && window.StockwiseChart) {
         const dailySalesData = JSON.parse(dailySalesCtx.getAttribute('data-sales') || '{}');
         const labels = Object.keys(dailySalesData).map(day => `${day}`);
         const data = Object.values(dailySalesData);
 
-        new Chart(dailySalesCtx, {
+        StockwiseChart.create(dailySalesCtx, {
             type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Sales ($)',
-                    data: data,
-                    borderColor: '#00d1b2',
-                    backgroundColor: 'rgba(0, 209, 178, 0.4)',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        ticks: {
-                            color: '#ffffff'
-                        },
-                        grid: {
-                            color: 'rgba(255,255,255,0.1)'
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: '#ffffff'
-                        },
-                        grid: {
-                            color: 'rgba(255,255,255,0.1)'
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#ffffff'
-                        }
-                    },
-                    title: {
-                        color: '#ffffff'
-                    }
-                }
-            }
+            data: { labels: labels, datasets: [StockwiseChart.barDataset('Sales (₱)', data)] },
+            options: StockwiseChart.barOptions({ currency: true })
         });
     }
 }
 
 function initializeReportsCharts() {
+    if (!window.StockwiseChart) return;
+
     // Category Chart
     const categoryCtx = document.getElementById('categoryChart');
     if (categoryCtx) {
         const categoryLabels = JSON.parse(categoryCtx.getAttribute('data-labels') || '[]');
         const categoryData = JSON.parse(categoryCtx.getAttribute('data-values') || '[]');
-        
-        new Chart(categoryCtx, {
+
+        StockwiseChart.create(categoryCtx, {
             type: 'bar',
-            data: {
-                labels: categoryLabels,
-                datasets: [{
-                    label: 'Number of Products',
-                    data: categoryData,
-                    borderColor: '#00d1b2',
-                    backgroundColor: 'rgba(0, 209, 178, 0.4)',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        ticks: {
-                            color: '#ffffff'
-                        },
-                        grid: {
-                            color: 'rgba(255,255,255,0.1)'
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: '#ffffff'
-                        },
-                        grid: {
-                            color: 'rgba(255,255,255,0.1)'
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#ffffff'
-                        }
-                    }
-                }
-            }
+            data: { labels: categoryLabels, datasets: [StockwiseChart.barDataset('Number of Products', categoryData)] },
+            options: StockwiseChart.barOptions()
         });
     }
 
@@ -184,48 +119,11 @@ function initializeReportsCharts() {
     if (priceRangeCtx) {
         const priceRangeLabels = JSON.parse(priceRangeCtx.getAttribute('data-labels') || '[]');
         const priceRangeData = JSON.parse(priceRangeCtx.getAttribute('data-values') || '[]');
-        
-        new Chart(priceRangeCtx, {
+
+        StockwiseChart.create(priceRangeCtx, {
             type: 'bar',
-            data: {
-                labels: priceRangeLabels,
-                datasets: [{
-                    label: 'Number of Products',
-                    data: priceRangeData,
-                    borderColor: '#00d1b2',
-                    backgroundColor: 'rgba(0, 209, 178, 0.4)',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        ticks: {
-                            color: '#ffffff'
-                        },
-                        grid: {
-                            color: 'rgba(255,255,255,0.1)'
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: '#ffffff'
-                        },
-                        grid: {
-                            color: 'rgba(255,255,255,0.1)'
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#ffffff'
-                        }
-                    }
-                }
-            }
+            data: { labels: priceRangeLabels, datasets: [StockwiseChart.barDataset('Number of Products', priceRangeData)] },
+            options: StockwiseChart.barOptions()
         });
     }
 
@@ -233,48 +131,14 @@ function initializeReportsCharts() {
     const monthlySalesCtx = document.getElementById('monthlySalesChart');
     if (monthlySalesCtx) {
         const monthlySalesData = JSON.parse(monthlySalesCtx.getAttribute('data-values') || '[]');
-        
-        new Chart(monthlySalesCtx, {
+
+        StockwiseChart.create(monthlySalesCtx, {
             type: 'bar',
             data: {
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [{
-                    label: 'Sales ($)',
-                    data: monthlySalesData,
-                    borderColor: '#00d1b2',
-                    backgroundColor: 'rgba(0, 209, 178, 0.4)',
-                    borderWidth: 2
-                }]
+                datasets: [StockwiseChart.barDataset('Sales (₱)', monthlySalesData)]
             },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        ticks: {
-                            color: '#ffffff'
-                        },
-                        grid: {
-                            color: 'rgba(255,255,255,0.1)'
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: '#ffffff'
-                        },
-                        grid: {
-                            color: 'rgba(255,255,255,0.1)'
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#ffffff'
-                        }
-                    }
-                }
-            }
+            options: StockwiseChart.barOptions({ currency: true })
         });
     }
 }
@@ -288,43 +152,28 @@ function initializeSalesPage() {
     makeTableSortable('salesTable');
 }
 
-// Update the main DOMContentLoaded function in custom.js:
+// =============================================
+// PAGE INITIALIZATION
+// One handler only. (The file used to register two DOMContentLoaded handlers that
+// both initialised the reports charts, which caused "Canvas is already in use".)
+// =============================================
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize table sorting
+    // Initialize table sorting (each call is a no-op when the table is absent or already initialised)
     makeTableSortable('productsTable');
-    makeTableSortable('salesTable'); // Add this line
-    
+    makeTableSortable('salesTable');
+
     // Initialize charts based on page
     if (document.getElementById('dailySalesChart')) {
         initializeDashboardCharts();
     }
-    
+
     if (document.getElementById('categoryChart')) {
         initializeReportsCharts();
     }
-    
+
     // Initialize sales page if needed
     if (document.getElementById('salesTable')) {
         initializeSalesPage();
-    }
-});
-
-
-
-// =============================================
-// PAGE INITIALIZATION
-// =============================================
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize table sorting
-    makeTableSortable('productsTable');
-    
-    // Initialize charts based on page
-    if (document.getElementById('dailySalesChart')) {
-        initializeDashboardCharts();
-    }
-    
-    if (document.getElementById('categoryChart')) {
-        initializeReportsCharts();
     }
 });

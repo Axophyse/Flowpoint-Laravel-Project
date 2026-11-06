@@ -4,7 +4,7 @@
 
 @section('content')
 
-<link rel="stylesheet" href="{{ asset('css/inventory.css') }}">
+<link rel="stylesheet" href="{{ asset('css/inventory.css') }}?v=phase2">
 
 <div class="main-body">
 
@@ -36,7 +36,7 @@
                                 </tr>
                                 <tr>
                                     <th>Price:</th>
-                                    <td>${{ number_format($product->price, 2) }}</td>
+                                    <td>₱{{ number_format($product->price, 2) }}</td>
                                 </tr>
                                 <tr>
                                     <th>Quantity:</th>
@@ -66,7 +66,7 @@
                                 </tr>
                                 <tr>
                                     <th>Total Value:</th>
-                                    <td><strong>${{ number_format($product->total_value, 2) }}</strong></td>
+                                    <td><strong>₱{{ number_format($product->total_value, 2) }}</strong></td>
                                 </tr>
                                 <tr>
                                     <th>Created Date:</th>
@@ -125,7 +125,7 @@
                 </div>
                 <div class="inventory-card-body">
                     <div class="statistics-display">
-                        <h3>${{ number_format($product->total_value, 2) }}</h3>
+                        <h3>₱{{ number_format($product->total_value, 2) }}</h3>
                         <p class="statistics-label">Total Inventory Value</p>
                     </div>
                 </div>

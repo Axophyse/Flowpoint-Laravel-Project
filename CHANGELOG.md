@@ -1,5 +1,24 @@
 # Changelog
 
+## Phase 2: Modern Minimalist UI redesign (2026-11-06)
+
+Scope: presentation only. `app/`, `routes/`, `database/`, `config/`, `tests/` and the Composer/npm files are
+unchanged. No new packages. Full details and known issues: see `PROJECT_HANDOFF.md`.
+
+- **Layout**: new shared shell in `layouts/app.blade.php` (fixed sidebar, Bootstrap Offcanvas drawer below 992px, topbar with user
+  dropdown, footer, guest header for public pages). `layouts/auth.blade.php` + `auth.css` redesigned.
+- **Styles**: one design system in `public/css/app.css`; `custom.css`, `inventory.css`, `sales.css` reduced to module-only rules;
+  all `#1e4f5b` colours replaced by the approved palette.
+- **Pages**: Dashboard, Inventory (list/create/edit/show), Sales (list/create/edit/show/report), Reports, Data Table, About, Contact,
+  Home, Login, Register, Password reset (request/reset/confirm), Email verify.
+- **Tables**: scroll wrappers on every table (Inventory had none).
+- **Charts**: new `public/js/chart-theme.js`; `custom.js` now has a single init handler (fixes `Canvas is already in use`); Chart.js pinned
+  to 4.6.1; Bootstrap standardised on 5.3.3 (verified: dropdown + offcanvas).
+- **Currency**: displayed `$` amounts changed to `₱` in views and inline scripts (display only; stored values and calculations untouched).
+- **Added**: `public/js/chart-theme.js`, `PROJECT_HANDOFF.md`, a Contact link in the sidebar, a guest header on public pages.
+- **Modified (31)**: 23 views, `public/css/{app,auth,custom,inventory,sales}.css`, `public/js/custom.js`,
+  `public/images/stockwise-logo-white.svg` (fill `#228B22` to `#166534`), `CHANGELOG.md`. **Deleted**: none.
+
 ## Phase 1: Rebranding from Flowpoint to Stockwise (2026-11-04)
 
 Scope: rename and rebrand only. No routes, controllers, models, migrations, database

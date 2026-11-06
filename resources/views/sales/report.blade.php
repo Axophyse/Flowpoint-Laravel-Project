@@ -4,7 +4,7 @@
 
 @section('content')
 
-<link rel="stylesheet" href="{{ asset('css/sales.css') }}">
+<link rel="stylesheet" href="{{ asset('css/sales.css') }}?v=phase2">
 
 <div class="main-body">
 
@@ -20,7 +20,7 @@
     <div class="sales-report-cards">
         <div class="sales-card">
             <h5>Total Revenue</h5>
-            <p>${{ number_format($totalRevenue, 2) }}</p>
+            <p>₱{{ number_format($totalRevenue, 2) }}</p>
         </div>
         <div class="sales-card">
             <h5>Items Sold</h5>
@@ -28,7 +28,7 @@
         </div>
         <div class="sales-card">
             <h5>Avg Transaction</h5>
-            <p>${{ number_format($averageTransaction, 2) }}</p>
+            <p>₱{{ number_format($averageTransaction, 2) }}</p>
         </div>
         <div class="sales-card">
             <h5>Total Transactions</h5>
@@ -41,13 +41,17 @@
         <!-- Daily Sales Chart - Now matches dashboard style -->
         <div class="sales-report-chart-large">
             <h5>Daily Sales ({{ \Carbon\Carbon::now()->format('F') }})</h5>
-            <canvas id="dailySalesChart" width="auto" height="auto"></canvas>
+            <div class="chart-frame">
+                <canvas id="dailySalesChart" role="img" aria-label="Bar chart of daily sales for the current month"></canvas>
+            </div>
         </div>
 
         <!-- Sales by Payment Method -->
         <div class="sales-report-chart-small">
             <h5>Sales by Payment Method</h5>
-            <canvas id="paymentMethodChart" width="400" height="200"></canvas>
+            <div class="chart-frame">
+                <canvas id="paymentMethodChart" role="img" aria-label="Doughnut chart of sales by payment method"></canvas>
+            </div>
         </div>
     </div>
 
@@ -58,7 +62,7 @@
             <div class="sales-report-table-header">
                 <h5>Sales by Category</h5>
             </div>
-            <div class="sales-report-table-wrapper">
+            <div class="sales-report-table-wrapper" tabindex="0" role="region" aria-label="Report table">
                 <table class="sales-report-table">
                     <thead>
                         <tr>
@@ -71,7 +75,7 @@
                         @foreach($salesByCategory as $category)
                         <tr>
                             <td>{{ $category->category }}</td>
-                            <td>${{ number_format($category->total_sales, 2) }}</td>
+                            <td>₱{{ number_format($category->total_sales, 2) }}</td>
                             <td>{{ number_format($category->total_quantity) }}</td>
                         </tr>
                         @endforeach
@@ -85,7 +89,7 @@
             <div class="sales-report-table-header">
                 <h5>Top Selling Products</h5>
             </div>
-            <div class="sales-report-table-wrapper">
+            <div class="sales-report-table-wrapper" tabindex="0" role="region" aria-label="Report table">
                 <table class="sales-report-table">
                     <thead>
                         <tr>
@@ -99,7 +103,7 @@
                         <tr>
                             <td>{{ $product->name }}</td>
                             <td>{{ number_format($product->total_sold) }}</td>
-                            <td>${{ number_format($product->total_revenue, 2) }}</td>
+                            <td>₱{{ number_format($product->total_revenue, 2) }}</td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -109,88 +113,51 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.6.1/dist/chart.umd.min.js"></script>
+<script src="{{ asset('js/chart-theme.js') }}?v=phase2"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // Daily Sales Chart - Now matches dashboard exactly
+
+    // Daily Sales Chart (same look as the dashboard)
     const dailySalesData = @json($dailySales);
     const labels = Object.keys(dailySalesData).map(day => `${day}`);
     const data = Object.values(dailySalesData);
 
-    const ctx = document.getElementById('dailySalesChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar', // Changed from 'line' to 'bar'
+    StockwiseChart.create('dailySalesChart', {
+        type: 'bar',
         data: {
             labels: labels,
-            datasets: [{
-                label: 'Sales ($)',
-                data: data,
-                borderColor: '#00d1b2',
-                backgroundColor: 'rgba(0, 209, 178, 0.4)', // Same as dashboard
-                borderWidth: 2 // Same as dashboard
-            }]
+            datasets: [StockwiseChart.barDataset('Sales (₱)', data)]
         },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    ticks: {
-                        color: '#ffffff' // x-axis labels
-                    },
-                    grid: {
-                        color: 'rgba(255,255,255,0.1)' // subtle grid lines
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        color: '#ffffff' // y-axis labels
-                    },
-                    grid: {
-                        color: 'rgba(255,255,255,0.1)'
-                    }
-                }
-            },
-            plugins: {
-                legend: {
-                    labels: {
-                        color: '#ffffff' // legend text
-                    }
-                },
-                title: {
-                    color: '#ffffff'
-                }
-            }
-        }
+        options: StockwiseChart.barOptions({ currency: true })
     });
 
-    // Payment Method Chart
-    const paymentMethodCtx = document.getElementById('paymentMethodChart').getContext('2d');
-    const paymentMethodChart = new Chart(paymentMethodCtx, {
+    // Payment Method Chart (colours match the payment badges on the Sales page)
+    const paymentLabels = @json($salesByPayment->pluck('payment_method'));
+    const paymentTotals = @json($salesByPayment->pluck('total_sales'));
+    const paymentColors = { cash: '#166534', card: '#2563EB', digital: '#7C3AED', transfer: '#D97706' };
+    const fallback = StockwiseChart.categorical(paymentLabels.length);
+
+    StockwiseChart.create('paymentMethodChart', {
         type: 'doughnut',
         data: {
-            labels: @json($salesByPayment->pluck('payment_method')),
+            labels: paymentLabels.map(l => String(l).charAt(0).toUpperCase() + String(l).slice(1)),
             datasets: [{
-                data: @json($salesByPayment->pluck('total_sales')),
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.8)',
-                    'rgba(54, 162, 235, 0.8)',
-                    'rgba(255, 205, 86, 0.8)',
-                    'rgba(75, 192, 192, 0.8)'
-                ],
-                borderColor: '#ffffff',
-                borderWidth: 1
+                data: paymentTotals,
+                backgroundColor: paymentLabels.map((l, i) => paymentColors[l] || fallback[i]),
+                borderColor: '#FFFFFF',
+                borderWidth: 2
             }]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
+            cutout: '62%',
             plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        color: '#ffffff',
-                        padding: 15
+                legend: { position: 'bottom' },
+                tooltip: {
+                    callbacks: {
+                        label: function (ctx) { return ' ' + ctx.label + ': ' + StockwiseChart.peso(ctx.parsed, 2); }
                     }
                 }
             }

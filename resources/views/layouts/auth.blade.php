@@ -6,30 +6,27 @@
     <title>@hasSection('title')@yield('title') | @endif{{ config('app.name', 'Stockwise') }}</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ @filemtime(public_path('css/app.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/auth.css') }}?v={{ @filemtime(public_path('css/auth.css')) }}">
 </head>
 
 <body class="auth-body">
 
     <div class="auth-wrapper">
-        
-        <!-- BRANDING -->
-        <section class="auth-branding d-flex flex-column justify-content-center">
-            
-            <div class="text-center">
-                <img src="{{ asset('images/stockwise-logo-white.svg') }}"
-                alt="{{ config('app.name') }} logo"
-                style="width: 75%; height: auto; border-radius: auto;">
-            </div>
 
+        <!-- BRANDING -->
+        <section class="auth-branding">
+            <img src="{{ asset('images/stockwise-logo-white.svg') }}" alt="{{ config('app.name') }} logo">
         </section>
 
-        <!-- RIGHT LOGIN/REGISTER SIDEBAR -->
-        <section class="auth-sidebar d-flex flex-column justify-content-center px-5">
-            @yield('content')
-            
-            <footer class="text-center text-light footer-small">
-                © {{ date('Y') }} {{ config('app.name') }}
+        <!-- LOGIN / REGISTER / PASSWORD PANEL -->
+        <section class="auth-sidebar">
+            <main class="auth-main">
+                @yield('content')
+            </main>
+
+            <footer class="footer-small">
+                © {{ date('Y') }} ZenFour {{ config('app.name') }}
             </footer>
         </section>
 

@@ -1,409 +1,75 @@
-/* DASHBOARD Page Layout */
-body {
-    background: #012a3a;
-    color: white;
-}
+/* ==========================================================================
+   custom.css : page-level rules for Home, About and Contact.
+   (Dashboard / Reports styles are shared components and live in app.css.)
+   Design tokens (--sw-*) are defined in app.css, which is loaded first.
+   ========================================================================== */
 
-.main-content {
-    margin-left: 225px;
-    margin-top: 50px;
-    height: calc(100vh - 50px);
-}
-
-.main-body {
-    padding: 15px;
-    gap: 15px;
-    height: calc(100vh - 50px);
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-}
-
+/* HOME (resources/views/home.blade.php) */
 .home-body {
-    padding: 15px;
-    gap: 15px;
-    height: calc(100vh - 50px);
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-/* UNIVERSAL ELEMENTS */
-.button-primary {
-    background-color: #3c8199;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background-color 0.3s;
-}
-
-.button-secondary {
-    background-color: #3c8199;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background-color 0.3s;
-}
-
-.button-primary:hover {
-    background-color: #1e4f5b;
-}
-
-.button {
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    color: white;
-    text-decoration: none;
-    margin: 0 2px;
-    transition: 0.3s;
-}
-
-.button-view { background-color: #3498db; }
-.button-edit { background-color: #f1c40f; color: black; }
-.button-delete { background-color: #e74c3c; }
-.button:hover { opacity: 0.8; }
-
-.text-muted { color: #ccc; }
-
-/* ABOUT SECTION */
-.about-header {
-    text-align: center;
-    align-self: center;
-}
-
-.about-sections {
-    display: flex;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
-    gap: 25px;
-    font-size: 0.9rem;
-}
-
-.about-sections > div {
-    background-color: #1e4f5b;
-    border-radius: 10px;
-    padding: 20px;
-    flex: 1 1 300px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-}
-
-/* DASHBOARD SECTION */
-.dashboard-header h1 {
-    margin: 0px;
-}
-
-.dashboard-cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    flex-wrap: space-evenly;
-}
-
-.dashboard-card {
-    flex: 1 1 calc(25% - 20px);
-    min-width: 200px;
-    padding: 20px;
-    border-radius: 10px;
-    background-color: #1e4f5b;
-    color: #fff;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-}
-
-.dashboard-card h5 {
-    margin-bottom: 10px;
-    font-size: 0.9rem;
-}
-
-.dashboard-card p {
-    font-size: 1rem;
-    margin: 0;
-}
-
-.dashboard-chart {
-    background-color: #1e4f5b;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-}
-
-.dailysales {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
-}
-
-/* REPORTS SECTION */
-.reports-header h1 {
-    margin: 0px;
-}
-
-.reports-cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.reports-card {
-    flex: 1 1 calc(25% - 20px);
-    min-width: 200px;
-    padding: 20px;
-    border-radius: 10px;
-    background-color: #1e4f5b;
-    color: #fff;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-}
-
-.reports-card h5 {
-    margin-bottom: 10px;
-    font-size: 0.9rem;
-}
-
-.reports-card p {
-    font-size: 1rem;
-    margin: 0;
-}
-
-.reports-charts {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.reports-chart {
-    flex: 1 1 calc(50% - 20px);
-    min-width: 300px;
-    background-color: #1e4f5b;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-}
-
-.reports-chart h5 {
-    margin-bottom: 15px;
-    font-size: 1rem;
-}
-
-.reports-chart-full {
-    background-color: #1e4f5b;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-}
-
-.reports-chart-full h5 {
-    margin-bottom: 15px;
-    font-size: 1rem;
-}
-
-.reports-table-container {
-    background-color: #1e4f5b;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-}
-
-.reports-table-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.reports-table-header h5 {
-    margin: 0;
-    font-size: 1rem;
-}
-
-.reports-table-wrapper {
-    overflow-x: auto;
-}
-
-.reports-table {
+    gap: var(--sw-gap);
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
+    max-width: 1100px;
+    margin: 0 auto;
 }
-
-.reports-table th,
-.reports-table td {
-    padding: 12px 10px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    text-align: left;
+.home-welcome {
+    padding: 28px;
+    background: var(--sw-white);
+    border: 1px solid var(--sw-border);
+    border-radius: var(--sw-radius);
+    box-shadow: var(--sw-shadow);
 }
-
-.reports-table th {
-    background-color: rgba(255,255,255,0.05);
-    font-weight: bold;
-}
-
-.reports-table tr:hover {
-    background-color: rgba(255,255,255,0.05);
-}
-
-.category-badge {
-    background-color: rgba(255,255,255,0.1);
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-}
-
-/* DATA TABLE SECTION */
-.data-table-header {
+.home-welcome h1 { margin: 0 0 6px; font-size: 1.5rem; }
+.home-welcome h5 { margin: 0; color: var(--sw-muted); font-size: 1rem; font-weight: 400; }
+.home-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.home-link {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-}
-
-.data-table-header h1 {
-    margin: 0;
-}
-
-.data-table-container {
-    background-color: #1e4f5b;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-}
-
-.data-table-header-inner {
-    margin-bottom: 15px;
-}
-
-.data-table-header-inner h5 {
-    margin: 0;
-    font-size: 1rem;
-}
-
-.data-table-wrapper {
-    overflow-x: auto;
-}
-
-.data-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-.data-table th,
-.data-table td {
-    padding: 12px 10px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    text-align: left;
-}
-
-.data-table th {
-    background-color: rgba(255,255,255,0.05);
-    font-weight: bold;
-    color: #ffffff;
-}
-
-.data-table tr:hover {
-    background-color: rgba(255,255,255,0.05);
-}
-
-.data-table tfoot th {
-    background-color: rgba(255,255,255,0.1);
-    font-weight: bold;
-}
-
-.text-end {
-    text-align: right;
-}
-
-/* BADGE STYLES */
-.quantity-badge,
-.status-badge,
-.category-badge {
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.8rem;
+    gap: 12px;
+    padding: 18px 20px;
+    background: var(--sw-white);
+    border: 1px solid var(--sw-border);
+    border-radius: var(--sw-radius);
+    box-shadow: var(--sw-shadow);
+    color: var(--sw-text);
     font-weight: 500;
+    text-decoration: none;
+    transition: border-color .15s ease, box-shadow .15s ease;
 }
+.home-link i { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 10px; background: var(--sw-brand-soft); color: var(--sw-brand); }
+.home-link:hover { border-color: var(--sw-brand); color: var(--sw-text); box-shadow: var(--sw-shadow-lg); }
 
-.quantity-high {
-    background-color: rgba(0, 209, 178, 0.3);
-    color: #00d1b2;
+/* ABOUT (resources/views/about.blade.php) */
+.about-sections { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--sw-gap); align-items: start; }
+.about-story, .about-mission, .about-members {
+    padding: 24px;
+    background: var(--sw-white);
+    border: 1px solid var(--sw-border);
+    border-radius: var(--sw-radius);
+    box-shadow: var(--sw-shadow);
 }
+.about-story h2, .about-mission h3, .about-members h3 { margin: 0 0 12px; font-size: 1.125rem; }
+.about-story p, .about-mission p { color: var(--sw-text); }
+.about-mission ul, .about-members ul { margin: 0; padding-left: 1.2rem; }
+.about-mission li, .about-members li { padding: 2px 0; }
 
-.quantity-medium {
-    background-color: rgba(255, 193, 7, 0.3);
-    color: #ffc107;
+/* CONTACT (resources/views/contact.blade.php) */
+.content-body { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: var(--sw-gap); align-items: start; }
+.send-message, .contact-information {
+    padding: 24px;
+    background: var(--sw-white);
+    border: 1px solid var(--sw-border);
+    border-radius: var(--sw-radius);
+    box-shadow: var(--sw-shadow);
 }
+.send-message .card-title, .contact-information .card-title { margin: 0 0 16px; font-size: 1.0625rem; }
+.contact-information li { padding-bottom: 12px; }
+.contact-information li:last-child { padding-bottom: 0; }
 
-.quantity-low {
-    background-color: rgba(220, 53, 69, 0.3);
-    color: #dc3545;
+@media (max-width: 991.98px) {
+    .content-body { grid-template-columns: minmax(0, 1fr); }
 }
-
-.status-in {
-    background-color: rgba(0, 209, 178, 0.3);
-    color: #00d1b2;
-}
-
-.status-low {
-    background-color: rgba(255, 193, 7, 0.3);
-    color: #ffc107;
-}
-
-.status-out {
-    background-color: rgba(220, 53, 69, 0.3);
-    color: #dc3545;
-}
-
-.category-badge {
-    background-color: rgba(108, 117, 125, 0.3);
-    color: #6c757d;
-}
-
-/* UNIVERSAL SORTING STYLES - Can be used on any table */
-.sorting-info {
-    background-color: rgba(0, 209, 178, 0.1);
-    border: 1px solid rgba(0, 209, 178, 0.3);
-    border-radius: 5px;
-    padding: 10px 10px;
-    margin-bottom: 15px;
-    color: #00d1b2;
-    font-size: 0.9rem;
-}
-
-.sortable {
-    cursor: pointer;
-    user-select: none;
-    position: relative;
-    transition: background-color 0.3s;
-}
-
-.sortable:hover {
-    background-color: rgba(0, 209, 178, 0.2) !important;
-}
-
-.sort-indicator {
-    margin-left: 5px;
-    font-size: 0.8rem;
-    opacity: 0.6;
-}
-
-.sort-asc {
-    background-color: rgba(0, 209, 178, 0.3) !important;
-}
-
-.sort-desc {
-    background-color: rgba(0, 209, 178, 0.3) !important;
-}
-
-.sort-asc .sort-indicator,
-.sort-desc .sort-indicator {
-    opacity: 1;
-    font-weight: bold;
-}
-
-/* Universal sorting JavaScript - can be used on any table */
-.table-sortable th.sortable {
-    cursor: pointer;
+@media (max-width: 575.98px) {
+    .home-welcome, .about-story, .about-mission, .about-members, .send-message, .contact-information { padding: 18px; }
 }

@@ -4,7 +4,6 @@
 
 @section('content')
 
-<link rel="stylesheet" href="{{ asset('css/custom.css') }}">
 
 <div class="main-body">
 
@@ -22,7 +21,7 @@
 
         <div class="dashboard-card">
             <h5>Monthly Total Sales</h5>
-            <p>${{ number_format($monthlyTotalSales, 2) }}</p>
+            <p>₱{{ number_format($monthlyTotalSales, 2) }}</p>
         </div>
 
         <div class="dashboard-card">
@@ -32,71 +31,38 @@
 
         <div class="dashboard-card">
             <h5>Monthly Average Sale</h5>
-            <p>${{ number_format($monthlyAverageSales, 2) }}</p>
+            <p>₱{{ number_format($monthlyAverageSales, 2) }}</p>
         </div>
     </div>
 
     <!-- Daily Sales Chart -->
     <div class="dashboard-chart">
         <h5>Daily Sales ({{ $currentMonth }})</h5>
-        <canvas id="dailySalesChart" width="400" height="100"></canvas>
+        <div class="chart-frame">
+            <canvas id="dailySalesChart" role="img" aria-label="Bar chart of daily sales for {{ $currentMonth }}"></canvas>
+        </div>
     </div>
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.6.1/dist/chart.umd.min.js"></script>
+<script src="{{ asset('js/chart-theme.js') }}?v=phase2"></script>
 
 <script>
-    const dailySalesData = @json($dailySales);
-    const labels = Object.keys(dailySalesData).map(day => `${day}`);
-    const data = Object.values(dailySalesData);
+    (function () {
+        const dailySalesData = @json($dailySales);
+        const labels = Object.keys(dailySalesData).map(day => `${day}`);
+        const data = Object.values(dailySalesData);
 
-    const ctx = document.getElementById('dailySalesChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Sales ($)',
-                data: data,
-                borderColor: '#00d1b2',
-                backgroundColor: 'rgba(0, 209, 178, 0.4)',
-                borderWidth: 2
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    ticks: {
-                        color: '#ffffff' // x-axis labels
-                    },
-                    grid: {
-                        color: 'rgba(255,255,255,0.1)' // subtle grid lines
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        color: '#ffffff' // y-axis labels
-                    },
-                    grid: {
-                        color: 'rgba(255,255,255,0.1)'
-                    }
-                }
+        StockwiseChart.create('dailySalesChart', {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [StockwiseChart.barDataset('Sales (₱)', data)]
             },
-            plugins: {
-                legend: {
-                    labels: {
-                        color: '#ffffff' // legend text
-                    }
-                },
-                title: {
-                    color: '#ffffff'
-                }
-            }
-        }
-    });
+            options: StockwiseChart.barOptions({ currency: true })
+        });
+    })();
 </script>
 
 @endsection

@@ -4,7 +4,7 @@
 
 @section('content')
 
-<link rel="stylesheet" href="{{ asset('css/inventory.css') }}">
+<link rel="stylesheet" href="{{ asset('css/inventory.css') }}?v=phase2">
 
 <div class="main-body">
 
@@ -55,7 +55,7 @@
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="price" class="form-label">Price ($) *</label>
+                                <label for="price" class="form-label">Price (₱) *</label>
                                 <input type="number" step="0.01" class="form-input @error('price') form-input-error @enderror"
                                     id="price" name="price" value="{{ old('price', $product->price) }}" required>
                                 @error('price')
@@ -112,7 +112,7 @@
                 <div class="inventory-card-body">
                     <ul class="product-info-list">
                         <li><strong>Name:</strong> {{ $product->name }}</li>
-                        <li><strong>Price:</strong> ${{ number_format($product->price, 2) }}</li>
+                        <li><strong>Price:</strong> ₱{{ number_format($product->price, 2) }}</li>
                         <li><strong>Quantity:</strong> {{ $product->quantity }}</li>
                         <li><strong>Category:</strong> {{ $product->category }}</li>
                         <li><strong>Status:</strong>
@@ -120,7 +120,7 @@
                                 {{ $product->stock_status }}
                             </span>
                         </li>
-                        <li><strong>Total Value:</strong> ${{ number_format($product->total_value, 2) }}</li>
+                        <li><strong>Total Value:</strong> ₱{{ number_format($product->total_value, 2) }}</li>
                     </ul>
                 </div>
             </div>

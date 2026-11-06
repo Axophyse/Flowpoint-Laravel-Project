@@ -4,8 +4,7 @@
 
 @section('content')
 
-<link rel="stylesheet" href="{{ asset('css/custom.css') }}">
-<link rel="stylesheet" href="{{ asset('css/inventory.css') }}">
+<link rel="stylesheet" href="{{ asset('css/inventory.css') }}?v=phase2">
 
 <div class="main-body">
 
@@ -35,8 +34,8 @@
             <h5>All Products</h5>
         </div>
 
-        <div class="inventory-card-body">
-            <div class="inventory-table-wrapper">
+        <div class="inventory-card-body card-body-flush">
+            <div class="inventory-table-wrapper" tabindex="0" role="region" aria-label="Products table">
                 <table class="inventory-table" id="inventoryTable">
                     <thead>
                         <tr>
@@ -74,7 +73,7 @@
                                     <br><small>{{ Str::limit($product->description, 50) }}</small>
                                 @endif
                             </td>
-                            <td>${{ number_format($product->price, 2) }}</td>
+                            <td>₱{{ number_format($product->price, 2) }}</td>
                             <td>
                                 <span class="quantity-badge {{ $product->quantity > 20 ? 'quantity-high' : ($product->quantity > 10 ? 'quantity-medium' : 'quantity-low') }}">
                                     {{ $product->quantity }}
@@ -90,19 +89,21 @@
                             </td>
                             <td>{{ $product->created_date->format('M d, Y') }}</td>
                             <td class="inventory-actions">
-                                <a href="{{ route('products.show', $product) }}" class="button button-view">View</a>
-                                <a href="{{ route('products.edit', $product) }}" class="button button-edit">Edit</a>
-                                <form action="{{ route('products.destroy', $product) }}" method="POST" class="inline-form">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="button button-delete"
-                                        onclick="return confirm('Are you sure you want to delete this product?')">Delete</button>
-                                </form>
+                                <div class="row-actions">
+                                    <a href="{{ route('products.show', $product) }}" class="button button-view">View</a>
+                                    <a href="{{ route('products.edit', $product) }}" class="button button-edit">Edit</a>
+                                    <form action="{{ route('products.destroy', $product) }}" method="POST" class="inline-form">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="button button-delete"
+                                            onclick="return confirm('Are you sure you want to delete this product?')">Delete</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="8" class="text-center">No products found. <a href="{{ route('products.create') }}">Create one</a></td>
+                            <td colspan="8" class="text-center text-muted py-5">No products found. <a href="{{ route('products.create') }}">Create one</a></td>
                         </tr>
                         @endforelse
                     </tbody>
@@ -111,13 +112,13 @@
 
             <!-- Pagination -->
             <div class="inventory-pagination">
-                {{ $products->links() }}
+                {{ $products->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>
 </div>
 
-<script src="{{ asset('js/custom.js') }}"></script>
+<script src="{{ asset('js/custom.js') }}?v=phase2"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize inventory table sorting

@@ -1,53 +1,726 @@
-/* views/layouts/app.blade.php */
-.sidebar {
-    width: 225px;
-    background-color: #3c8199;
-    padding-top: 0px;
-    position: fixed;
-    top: 0; bottom: 0; left: 0;
+/* ==========================================================================
+   Stockwise design system  ("Modern Minimalist")
+   Loaded in <head> by layouts/app.blade.php and layouts/auth.blade.php, so it
+   comes BEFORE the per-page module sheets (custom.css / inventory.css /
+   sales.css). Every rule that is shared between modules lives here; the module
+   sheets only contain rules that belong to one module. No selector is defined
+   in more than one file.
+
+   Contents
+     1. Design tokens
+     2. Base + Bootstrap theme overrides
+     3. App shell (sidebar, offcanvas drawer, topbar, guest header, footer)
+     4. Page structure (page body, page headers)
+     5. Cards, KPI tiles, chart frames
+     6. Tables, sorting, scroll wrappers
+     7. Buttons
+     8. Badges
+     9. Alerts
+    10. Forms
+    11. Form / detail page layouts
+    12. Pagination
+    13. Utilities + accessibility
+   ========================================================================== */
+
+/* 1. DESIGN TOKENS ------------------------------------------------------- */
+:root {
+    /* palette (approved) */
+    --sw-white: #FFFFFF;
+    --sw-surface: #F5F7F5;
+    --sw-brand: #166534;
+    --sw-text: #1F2937;
+    --sw-border: #E5E7EB;
+
+    /* derived from the palette */
+    --sw-brand-dark: #14532D;
+    --sw-brand-soft: #ECF5EF;
+    --sw-brand-ring: rgba(22, 101, 52, .22);
+    --sw-muted: #4B5563;
+    --sw-border-strong: #D1D5DB;   /* form-control borders (higher contrast than card borders) */
+
+    /* status colours (text on soft background, both >= 4.5:1) */
+    --sw-success-bg: #DCFCE7;  --sw-success-fg: #14532D;
+    --sw-warning-bg: #FEF3C7;  --sw-warning-fg: #92400E;
+    --sw-danger-bg:  #FEE2E2;  --sw-danger-fg:  #991B1B;
+    --sw-neutral-bg: #F3F4F6;  --sw-neutral-fg: #374151;
+
+    /* shape + depth */
+    --sw-radius: 12px;
+    --sw-radius-sm: 8px;
+    --sw-shadow: 0 1px 2px rgba(16, 24, 40, .05), 0 1px 3px rgba(16, 24, 40, .06);
+    --sw-shadow-lg: 0 8px 24px rgba(16, 24, 40, .10);
+
+    /* layout */
+    --sw-sidebar-w: 248px;
+    --sw-topbar-h: 60px;
+    --sw-gap: 20px;
+
+    /* typography: system stack only (no web fonts) */
+    --sw-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+
+    /* Bootstrap 5.3 theme hooks */
+    --bs-body-font-family: var(--sw-font);
+    --bs-body-color: var(--sw-text);
+    --bs-body-bg: var(--sw-surface);
+    --bs-border-color: var(--sw-border);
+    --bs-link-color-rgb: 22, 101, 52;
+    --bs-link-hover-color-rgb: 20, 83, 45;
+    --bs-primary: #166534;
+    --bs-primary-rgb: 22, 101, 52;
+    --bs-offcanvas-width: 288px;
 }
 
-.sidebar .brandLogo {
-    width: auto;
-    padding: 20px;
+/* 2. BASE + BOOTSTRAP THEME OVERRIDES ------------------------------------ */
+body {
+    margin: 0;
+    background: var(--sw-surface);
+    color: var(--sw-text);
+    font-family: var(--sw-font);
+    font-size: .9375rem;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
 }
 
-.sidebar .sidebar-buttons {
-    margin-top: 0px;
+h1, h2, h3, h4, h5, h6 { color: var(--sw-text); font-weight: 600; letter-spacing: -.01em; }
+a { text-underline-offset: 2px; }
+.text-muted { color: var(--sw-muted) !important; }
+
+.btn {
+    --bs-btn-border-radius: var(--sw-radius-sm);
+    --bs-btn-font-weight: 500;
+    --bs-btn-padding-x: 1rem;
+    --bs-btn-padding-y: .5rem;
+}
+.btn-primary {
+    --bs-btn-bg: #166534;
+    --bs-btn-border-color: #166534;
+    --bs-btn-hover-bg: #14532D;
+    --bs-btn-hover-border-color: #14532D;
+    --bs-btn-active-bg: #14532D;
+    --bs-btn-active-border-color: #14532D;
+    --bs-btn-disabled-bg: #166534;
+    --bs-btn-disabled-border-color: #166534;
+    --bs-btn-focus-shadow-rgb: 22, 101, 52;
+}
+.btn-link { --bs-btn-color: #166534; --bs-btn-hover-color: #14532D; }
+
+.form-check-input:checked { background-color: var(--sw-brand); border-color: var(--sw-brand); }
+.form-check-input:focus { border-color: var(--sw-brand); box-shadow: 0 0 0 3px var(--sw-brand-ring); }
+
+.alert { border-radius: var(--sw-radius-sm); }
+.alert-success {
+    --bs-alert-color: var(--sw-brand-dark);
+    --bs-alert-bg: var(--sw-brand-soft);
+    --bs-alert-border-color: #BBE0C7;
 }
 
-.sidebar a {
-    display: block;
-    width: 100%;
-    align-self: center;
-    color: #ffffff;
-    padding: 10px;
-    text-decoration: none;
+.dropdown-menu {
+    --bs-dropdown-border-color: var(--sw-border);
+    --bs-dropdown-border-radius: 10px;
+    --bs-dropdown-link-active-bg: var(--sw-brand);
+    --bs-dropdown-link-hover-bg: var(--sw-surface);
+    --bs-dropdown-padding-x: 6px;
+    --bs-dropdown-padding-y: 6px;
+    box-shadow: var(--sw-shadow-lg);
+}
+.dropdown-item { border-radius: 6px; padding: .5rem .75rem; }
+
+/* 3. APP SHELL ----------------------------------------------------------- */
+.app-frame { display: flex; min-height: 100vh; }
+.app-main {
+    flex: 1 1 auto;
+    min-width: 0;                 /* lets wide tables scroll instead of stretching the page */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-.sidebar a.active,
-.sidebar a:hover {
-    background-color: #073f5b;
+/* Sidebar = Bootstrap responsive offcanvas.
+   < 992px : slide-in drawer (Bootstrap positions it fixed and animates it)
+   >= 992px: Bootstrap forces transparent background + hides the header, so the
+             white surface lives on .app-sidebar-inner. The sidebar is sticky,
+             not fixed, so Bootstrap's resize handler can still close an open
+             drawer when the window is widened. */
+.app-sidebar { --bs-offcanvas-width: 288px; }
+.app-sidebar-inner {
+    flex: 1 1 auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--sw-white);
+    border-right: 1px solid var(--sw-border);
+    min-height: 0;
 }
+.app-sidebar .offcanvas-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--sw-border);
+}
+.app-sidebar .offcanvas-body {
+    flex: 1 1 auto;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px;
+    overflow-y: auto;
+}
+.sw-brand { display: block; padding: 22px 20px 14px; }
+.sw-brand img, .app-sidebar .offcanvas-header img { display: block; width: 100%; max-width: 190px; height: auto; }
 
-/* */
-
-.topbar {
-    height: 50px;
-    position: fixed;
-    top: 0; left: 225px; right: 0;
-    background-color: #3c8199;
+.sw-nav { display: flex; flex-direction: column; gap: 2px; }
+.sw-nav a {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    padding-right: 25px;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: var(--sw-radius-sm);
+    color: var(--sw-text);
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color .15s ease, color .15s ease;
+}
+.sw-nav a i { width: 20px; text-align: center; color: var(--sw-muted); transition: color .15s ease; }
+.sw-nav a:hover { background: var(--sw-surface); }
+.sw-nav a.active { background: var(--sw-brand-soft); color: var(--sw-brand); }
+.sw-nav a.active i { color: var(--sw-brand); }
+
+@media (min-width: 992px) {
+    .app-sidebar {
+        position: sticky;
+        top: 0;
+        flex: 0 0 var(--sw-sidebar-w);
+        width: var(--sw-sidebar-w);
+        height: 100vh;
+        align-self: flex-start;
+    }
 }
 
-.body-footer {
-    color: white;
-    position: fixed;
-    bottom: 0; left: 227px; right: 0;
+/* Top bar */
+.app-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: var(--sw-topbar-h);
+    padding: 0 24px;
+    background: var(--sw-white);
+    border-bottom: 1px solid var(--sw-border);
+}
+.app-topbar-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.app-topbar-spacer { flex: 1 1 auto; }
+
+.sw-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid var(--sw-border);
+    border-radius: var(--sw-radius-sm);
+    background: var(--sw-white);
+    color: var(--sw-text);
+    cursor: pointer;
+}
+.sw-icon-btn:hover { background: var(--sw-surface); }
+
+.user-menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 10px 5px 6px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    color: var(--sw-text);
+    font-weight: 500;
+    text-decoration: none;
+}
+.user-menu-toggle:hover, .user-menu-toggle.show { background: var(--sw-surface); border-color: var(--sw-border); color: var(--sw-text); }
+.user-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--sw-brand-soft);
+    color: var(--sw-brand);
+    font-size: .875rem;
+    font-weight: 600;
+}
+.user-name { max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Public pages (no sidebar): simple header */
+.guest-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 24px;
+    background: var(--sw-white);
+    border-bottom: 1px solid var(--sw-border);
+}
+.guest-header .sw-brand-link img { display: block; width: 170px; max-width: 45vw; height: auto; }
+.guest-nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.guest-nav a { padding: 8px 12px; border-radius: var(--sw-radius-sm); color: var(--sw-text); font-weight: 500; text-decoration: none; }
+.guest-nav a:hover { background: var(--sw-surface); }
+
+/* Footer: in normal flow, always below the content (never overlaps it) */
+.app-footer {
+    padding: 18px 24px;
+    border-top: 1px solid var(--sw-border);
+    background: var(--sw-white);
+    color: var(--sw-muted);
+    font-size: .8125rem;
+}
+
+/* 4. PAGE STRUCTURE ------------------------------------------------------ */
+.main-content { flex: 1 0 auto; padding: 28px 28px 36px; }
+.main-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sw-gap);
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* every page header: title left, actions right, wraps on narrow screens */
+.dashboard-header, .inventory-header, .sales-header, .reports-header,
+.sales-report-header, .data-table-header, .about-header, .main-body > .header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 16px;
+}
+.dashboard-header h1, .inventory-header h1, .sales-header h1, .reports-header h1,
+.sales-report-header h1, .data-table-header h1, .about-header h2, .main-body > .header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    line-height: 1.25;
+}
+.about-header { flex-direction: column; align-items: flex-start; gap: 4px; }
+.about-header p, .main-body > .header p { margin: 0; color: var(--sw-muted); }
+.main-body > .header { flex-direction: column; align-items: flex-start; gap: 4px; }
+.main-body > .header .lead { font-size: 1rem; }
+div.sales-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.sorting-info p { margin: 0; color: var(--sw-muted); font-size: .875rem; }
+
+/* 5. CARDS, KPI TILES, CHART FRAMES -------------------------------------- */
+/* generic white card */
+.inventory-card, .sales-card, .action-card, .product-information-card,
+.dashboard-chart, .reports-chart, .reports-chart-full,
+.sales-report-chart-large, .sales-report-chart-small,
+.sales-table-container, .reports-table-container, .data-table-container,
+.sales-report-table-container,
+.dashboard-card, .reports-card {
+    background: var(--sw-white);
+    border: 1px solid var(--sw-border);
+    border-radius: var(--sw-radius);
+    box-shadow: var(--sw-shadow);
+    min-width: 0;
+}
+
+/* card header strip + body */
+.inventory-card-header, .sales-card-header,
+.sales-table-header, .reports-table-header, .data-table-header-inner, .sales-report-table-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--sw-border);
+}
+.inventory-card-header h5, .sales-card-header h5, .sales-table-header h5, .reports-table-header h5,
+.data-table-header-inner h5, .sales-report-table-header h5 { margin: 0; font-size: 1rem; }
+.inventory-card-body, .sales-card-body { padding: 20px; }
+.inventory-card-body.card-body-flush { padding: 0; }
+
+/* chart panels: title + canvas */
+.dashboard-chart, .reports-chart, .reports-chart-full,
+.sales-report-chart-large, .sales-report-chart-small { padding: 20px; }
+.dashboard-chart h5, .reports-chart h5, .reports-chart-full h5,
+.sales-report-chart-large h5, .sales-report-chart-small h5 { margin: 0 0 16px; font-size: 1rem; }
+/* Chart.js needs a relatively positioned, fixed-height parent to size responsively */
+.chart-frame { position: relative; height: 320px; }
+.chart-frame--sm { height: 280px; }
+.chart-frame canvas { max-width: 100%; }
+
+/* KPI tiles */
+.dashboard-cards, .reports-cards, .sales-summary, .sales-report-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 16px;
+}
+.dashboard-card, .reports-card,
+.sales-summary .sales-card, .sales-report-cards .sales-card { padding: 18px 20px; }
+.dashboard-card h5, .reports-card h5,
+.sales-summary .sales-card h5, .sales-report-cards .sales-card h5 {
+    margin: 0 0 6px;
+    color: var(--sw-muted);
+    font-size: .8125rem;
+    font-weight: 500;
+    letter-spacing: .01em;
+}
+.dashboard-card p, .reports-card p,
+.sales-summary .sales-card p, .sales-report-cards .sales-card p {
+    margin: 0;
+    color: var(--sw-text);
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -.02em;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+}
+
+/* chart grids (dashboard has a single chart; reports/sales-report have two) */
+.reports-charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sw-gap); }
+.sales-report-charts { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: var(--sw-gap); }
+.sales-report-tables { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sw-gap); }
+
+/* 6. TABLES -------------------------------------------------------------- */
+.inventory-table-wrapper, .sales-table-wrapper, .reports-table-wrapper,
+.sales-report-table-wrapper, .data-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.inventory-table, .sales-table, .reports-table, .sales-report-table, .data-table {
+    width: 100%;
+    margin: 0;
+    border-collapse: collapse;
+    color: var(--sw-text);
+    font-size: .875rem;
+}
+.inventory-table { min-width: 900px; }
+.sales-table { min-width: 1080px; }
+.data-table { min-width: 860px; }
+.reports-table { min-width: 720px; }
+.sales-report-table { min-width: 340px; }
+
+.inventory-table th, .sales-table th, .reports-table th, .sales-report-table th, .data-table th {
+    padding: 11px 12px;
+    background: var(--sw-surface);
+    border-bottom: 1px solid var(--sw-border);
+    color: var(--sw-muted);
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .04em;
     text-align: left;
-    font-size: 0.8rem;
-    opacity: 25%;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+.inventory-table td, .sales-table td, .reports-table td, .sales-report-table td, .data-table td {
+    padding: 13px 12px;
+    border-bottom: 1px solid var(--sw-border);
+    vertical-align: middle;
+}
+.inventory-table tbody tr:last-child td, .sales-table tbody tr:last-child td,
+.reports-table tbody tr:last-child td, .sales-report-table tbody tr:last-child td,
+.data-table tbody tr:last-child td { border-bottom: 0; }
+.inventory-table tbody tr:hover, .sales-table tbody tr:hover, .reports-table tbody tr:hover,
+.sales-report-table tbody tr:hover, .data-table tbody tr:hover { background: #FAFBFA; }
+.inventory-table td small, .sales-table td small { color: var(--sw-muted); }
+.data-table tfoot th { border-top: 1px solid var(--sw-border); border-bottom: 0; color: var(--sw-text); text-transform: none; font-size: .875rem; letter-spacing: 0; }
+.text-end { text-align: right; }
+.text-center { text-align: center; }
+td.inventory-actions, td.sales-actions { white-space: nowrap; }
+.inventory-table th:first-child, .inventory-table td:first-child,
+.sales-table th:first-child, .sales-table td:first-child,
+.reports-table th:first-child, .reports-table td:first-child,
+.sales-report-table th:first-child, .sales-report-table td:first-child,
+.data-table th:first-child, .data-table td:first-child { padding-left: 20px; }
+.inventory-table th:last-child, .inventory-table td:last-child,
+.sales-table th:last-child, .sales-table td:last-child,
+.reports-table th:last-child, .reports-table td:last-child,
+.sales-report-table th:last-child, .sales-report-table td:last-child,
+.data-table th:last-child, .data-table td:last-child { padding-right: 20px; }
+.row-actions { display: flex; align-items: center; gap: 6px; }
+.inline-form { display: inline; margin: 0; }
+
+/* sortable headers (hooks used by public/js/custom.js: .sortable, .sort-asc/.sort-desc, .sort-indicator) */
+th.sortable { cursor: pointer; user-select: none; }
+th.sortable:hover { background: #EEF2EE; color: var(--sw-text); }
+.sort-indicator { margin-left: 4px; color: #9CA3AF; font-size: .75rem; }
+th.sort-asc .sort-indicator, th.sort-desc .sort-indicator { color: var(--sw-brand); }
+
+/* key/value tables on detail pages */
+.product-info-table, .sale-info-table { width: 100%; border-collapse: collapse; }
+.product-info-table th, .sale-info-table th {
+    width: 42%;
+    padding: 10px 12px 10px 0;
+    border-bottom: 1px solid var(--sw-border);
+    color: var(--sw-muted);
+    font-weight: 500;
+    text-align: left;
+    vertical-align: top;
+}
+.product-info-table td, .sale-info-table td { padding: 10px 0; border-bottom: 1px solid var(--sw-border); }
+.product-info-table tr:last-child th, .product-info-table tr:last-child td,
+.sale-info-table tr:last-child th, .sale-info-table tr:last-child td { border-bottom: 0; }
+
+/* 7. BUTTONS ------------------------------------------------------------- */
+/* small table/action buttons first, so combined classes (.button.button-primary) pick up the larger size below */
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 5px 11px;
+    border: 1px solid var(--sw-border-strong);
+    border-radius: var(--sw-radius-sm);
+    background: var(--sw-white);
+    color: var(--sw-text);
+    font: inherit;
+    font-size: .8125rem;
+    font-weight: 500;
+    line-height: 1.4;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+.button:hover { background: var(--sw-surface); color: var(--sw-text); }
+.button-view { color: var(--sw-text); }
+.button-edit { background: var(--sw-brand-soft); border-color: #BBE0C7; color: var(--sw-brand); }
+.button-edit:hover { background: #DDEFE3; color: var(--sw-brand-dark); }
+.button-delete { background: var(--sw-white); border-color: #FCA5A5; color: var(--sw-danger-fg); }
+.button-delete:hover { background: var(--sw-danger-bg); color: var(--sw-danger-fg); }
+
+.button-primary, .button-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border: 1px solid var(--sw-brand);
+    border-radius: var(--sw-radius-sm);
+    background: var(--sw-brand);
+    color: #fff;
+    font: inherit;
+    font-size: .9rem;
+    font-weight: 500;
+    line-height: 1.4;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+.button-primary:hover { background: var(--sw-brand-dark); border-color: var(--sw-brand-dark); color: #fff; }
+.button-secondary { background: var(--sw-white); border-color: var(--sw-border-strong); color: var(--sw-text); }
+.button-secondary:hover { background: var(--sw-surface); color: var(--sw-text); }
+
+/* 8. BADGES -------------------------------------------------------------- */
+.status-badge, .quantity-badge, .category-badge, .payment-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 10px;
+    border-radius: 999px;
+    background: var(--sw-neutral-bg);
+    color: var(--sw-neutral-fg);
+    font-size: .75rem;
+    font-weight: 600;
+    line-height: 1.6;
+    white-space: nowrap;
+}
+.category-badge { background: var(--sw-surface); border: 1px solid var(--sw-border); font-weight: 500; }
+/* success / in stock / completed / high */
+.status-in, .status-success, .status-completed, .quantity-high, .quantity-badge.success { background: var(--sw-success-bg); color: var(--sw-success-fg); }
+/* warning / low / pending / medium */
+.status-low, .status-warning, .status-pending, .quantity-medium, .quantity-badge.warning { background: var(--sw-warning-bg); color: var(--sw-warning-fg); }
+/* danger / out / cancelled */
+.status-out, .status-danger, .status-cancelled, .quantity-low, .quantity-badge.danger { background: var(--sw-danger-bg); color: var(--sw-danger-fg); }
+.status-refunded { background: var(--sw-neutral-bg); color: var(--sw-neutral-fg); }
+/* payment methods: neutral pill with a small dot */
+.payment-badge { background: var(--sw-white); border: 1px solid var(--sw-border); font-weight: 500; }
+.payment-badge::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #9CA3AF; }
+.payment-cash::before { background: #166534; }
+.payment-card::before { background: #2563EB; }
+.payment-digital::before { background: #7C3AED; }
+.payment-transfer::before { background: #D97706; }
+
+/* 9. ALERTS -------------------------------------------------------------- */
+.inventory-alert, .sales-alert {
+    padding: 12px 16px;
+    border: 1px solid var(--sw-border);
+    border-left-width: 4px;
+    border-radius: var(--sw-radius-sm);
+    background: var(--sw-white);
+    box-shadow: var(--sw-shadow);
+}
+.inventory-alert.success, .sales-alert.success { background: var(--sw-brand-soft); border-color: #BBE0C7; border-left-color: var(--sw-brand); color: var(--sw-brand-dark); }
+.inventory-alert.error, .inventory-alert.danger, .sales-alert.error, .sales-alert.danger {
+    background: var(--sw-danger-bg); border-color: #FECACA; border-left-color: #DC2626; color: var(--sw-danger-fg);
+}
+
+/* 10. FORMS -------------------------------------------------------------- */
+.form-label, label.form-label { display: block; margin-bottom: 6px; color: var(--sw-text); font-size: .875rem; font-weight: 500; }
+.form-input, .form-control, .form-select {
+    display: block;
+    width: 100%;
+    padding: .6rem .8rem;
+    border: 1px solid var(--sw-border-strong);
+    border-radius: var(--sw-radius-sm);
+    background-color: var(--sw-white);
+    color: var(--sw-text);
+    font: inherit;
+    line-height: 1.4;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+select.form-input { appearance: auto; }
+.form-input::placeholder, .form-control::placeholder { color: #6B7280; }
+.form-input:focus, .form-control:focus, .form-select:focus {
+    border-color: var(--sw-brand);
+    background-color: var(--sw-white);   /* Bootstrap's :focus rule would otherwise paint --bs-body-bg (#F5F7F5) */
+    box-shadow: 0 0 0 3px var(--sw-brand-ring);
+    outline: 0;
+}
+.form-input-readonly, .form-input[readonly] { background: var(--sw-surface); }
+.form-input-error, .form-control.is-invalid, .form-select.is-invalid { border-color: #DC2626; }
+.form-input-error:focus, .form-control.is-invalid:focus { box-shadow: 0 0 0 3px rgba(220, 38, 38, .18); }
+.form-error, .invalid-feedback { margin-top: 6px; color: var(--sw-danger-fg); font-size: .8125rem; }
+.invalid-feedback { display: block; }
+.form-hint { display: block; margin-top: 6px; color: var(--sw-muted); font-size: .8125rem; }
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+}
+.form-row .form-group { margin-bottom: 0; }
+.form-group { margin-bottom: 16px; }
+.form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+    padding-top: 18px;
+    border-top: 1px solid var(--sw-border);
+}
+textarea.form-input { min-height: 96px; resize: vertical; }
+
+/* 11. FORM / DETAIL PAGE LAYOUTS ----------------------------------------- */
+.inventory-form-container, .sales-form-container, .product-details-container, .sales-details-container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: var(--sw-gap);
+    align-items: start;
+}
+.inventory-form-main, .sales-form-main, .product-details-main, .sales-details-main { min-width: 0; }
+.inventory-form-sidebar, .sales-form-sidebar, .product-details-sidebar, .sales-details-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sw-gap);
+    min-width: 0;
+}
+.product-info-grid, .sale-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 8px 32px;
+}
+.product-description, .customer-info-section, .notes-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--sw-border);
+}
+.product-description h6, .customer-info-section h6, .notes-section h6 { margin: 0 0 10px; font-size: .9375rem; }
+.description-text { margin: 0; color: var(--sw-text); }
+.notes-content { padding: 12px 14px; border-radius: var(--sw-radius-sm); background: var(--sw-surface); }
+.product-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--sw-border); }
+.action-buttons { display: flex; flex-direction: column; gap: 10px; }
+.action-buttons .button, .action-buttons .action-form { width: 100%; }
+.action-form { margin: 0; }
+.action-card .sales-card-body { padding: 20px; }
+.product-info-list p { margin: 0 0 10px; }
+.product-info-list p:last-child { margin-bottom: 0; }
+.statistics-display { text-align: center; }
+.statistics-display h3 { margin: 0 0 4px; color: var(--sw-brand); font-size: 1.75rem; font-variant-numeric: tabular-nums; }
+.statistics-label { margin: 0; color: var(--sw-muted); font-size: .8125rem; }
+.sale-summary h6 { margin: 0 0 12px; font-size: .9375rem; }
+.sale-summary .summary-list p { display: flex; justify-content: space-between; gap: 12px; margin: 0; padding: 8px 0; border-bottom: 1px solid var(--sw-border); }
+.sale-summary .summary-list p:last-child { border-bottom: 0; }
+.inventory-form-container > .inventory-form-main:only-child { grid-column: 1; }
+
+/* 12. PAGINATION (Laravel pagination::bootstrap-5 markup) ---------------- */
+.inventory-pagination, .sales-pagination { padding: 14px 20px; border-top: 1px solid var(--sw-border); }
+.inventory-pagination nav > .d-flex, .sales-pagination nav > .d-flex { gap: 10px; }
+.inventory-pagination p, .sales-pagination p { margin: 0; color: var(--sw-muted); font-size: .8125rem; }
+.pagination {
+    --bs-pagination-color: var(--sw-text);
+    --bs-pagination-border-color: var(--sw-border);
+    --bs-pagination-hover-color: var(--sw-brand);
+    --bs-pagination-hover-bg: var(--sw-brand-soft);
+    --bs-pagination-hover-border-color: var(--sw-border);
+    --bs-pagination-focus-color: var(--sw-brand);
+    --bs-pagination-focus-bg: var(--sw-brand-soft);
+    --bs-pagination-focus-box-shadow: 0 0 0 3px var(--sw-brand-ring);
+    --bs-pagination-active-bg: var(--sw-brand);
+    --bs-pagination-active-border-color: var(--sw-brand);
+    --bs-pagination-disabled-color: #9CA3AF;
+    --bs-pagination-border-radius: var(--sw-radius-sm);
+    margin: 0;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+.pagination .page-link { border-radius: var(--sw-radius-sm); margin: 0; }
+
+/* 13. UTILITIES + ACCESSIBILITY ------------------------------------------ */
+.skip-link {
+    position: absolute;
+    left: 12px;
+    top: -60px;
+    z-index: 2000;
+    padding: 8px 14px;
+    border-radius: var(--sw-radius-sm);
+    background: var(--sw-brand);
+    color: #fff;
+    text-decoration: none;
+}
+.skip-link:focus { top: 12px; color: #fff; }
+:focus-visible { outline: 2px solid var(--sw-brand); outline-offset: 2px; }
+.form-input:focus-visible, .form-control:focus-visible, .form-select:focus-visible { outline: 0; }
+.inventory-table-wrapper:focus-visible, .sales-table-wrapper:focus-visible, .reports-table-wrapper:focus-visible,
+.sales-report-table-wrapper:focus-visible, .data-table-wrapper:focus-visible { outline-offset: -2px; }
+
+/* RESPONSIVE ------------------------------------------------------------- */
+@media (max-width: 1099.98px) {
+    .inventory-form-container, .sales-form-container, .product-details-container, .sales-details-container { grid-template-columns: minmax(0, 1fr); }
+    .sales-report-charts { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 991.98px) {
+    .app-topbar { padding: 0 16px; }
+    .main-content { padding: 20px 16px 28px; }
+    .reports-charts, .sales-report-tables { grid-template-columns: minmax(0, 1fr); }
+    .app-footer { padding: 16px; }
+    .guest-header { padding: 12px 16px; }
+}
+@media (max-width: 575.98px) {
+    :root { --sw-gap: 16px; }
+    .dashboard-header h1, .inventory-header h1, .sales-header h1, .reports-header h1,
+    .sales-report-header h1, .data-table-header h1, .about-header h2, .main-body > .header h1 { font-size: 1.3125rem; }
+    .dashboard-cards, .reports-cards, .sales-summary, .sales-report-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .dashboard-card, .reports-card, .sales-summary .sales-card, .sales-report-cards .sales-card { padding: 14px 16px; }
+    .dashboard-card p, .reports-card p, .sales-summary .sales-card p, .sales-report-cards .sales-card p { font-size: 1.25rem; }
+    .inventory-card-body, .sales-card-body { padding: 16px; }
+    .inventory-card-body.card-body-flush { padding: 0; }
+    .dashboard-chart, .reports-chart, .reports-chart-full, .sales-report-chart-large, .sales-report-chart-small { padding: 16px; }
+    .chart-frame { height: 260px; }
+    .chart-frame--sm { height: 240px; }
+    .inventory-header .button-primary, .inventory-header .button-secondary,
+    .sales-header .button-primary, .sales-header .button-secondary { flex: 0 0 auto; }
+    .form-actions .button-primary, .form-actions .button-secondary { flex: 1 1 auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; animation: none !important; }
 }

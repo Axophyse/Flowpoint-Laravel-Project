@@ -4,8 +4,7 @@
 
 @section('content')
 
-<link rel="stylesheet" href="{{ asset('css/custom.css') }}">
-<link rel="stylesheet" href="{{ asset('css/sales.css') }}">
+<link rel="stylesheet" href="{{ asset('css/sales.css') }}?v=phase2">
 
 <div class="main-body">
 
@@ -45,7 +44,7 @@
                                 </tr>
                                 <tr>
                                     <th>Unit Price:</th>
-                                    <td>${{ number_format($sale->unit_price, 2) }}</td>
+                                    <td>₱{{ number_format($sale->unit_price, 2) }}</td>
                                 </tr>
                             </table>
                         </div>
@@ -53,7 +52,7 @@
                             <table class="sale-info-table">
                                 <tr>
                                     <th>Total Amount:</th>
-                                    <td><strong>${{ number_format($sale->total_amount, 2) }}</strong></td>
+                                    <td><strong>₱{{ number_format($sale->total_amount, 2) }}</strong></td>
                                 </tr>
                                 <tr>
                                     <th>Payment Method:</th>
@@ -142,7 +141,7 @@
                 <div class="sales-card-body">
                     <div class="product-info-list">
                         <p>Name: {{ $sale->product->name }}</p>
-                        <p>Current Price:</strong> ${{ number_format($sale->product->price, 2) }}</p>
+                        <p>Current Price: ₱{{ number_format($sale->product->price, 2) }}</p>
                         <p>Current Stock: {{ $sale->product->quantity }}</p>
                         <p>
                             Stock Status:

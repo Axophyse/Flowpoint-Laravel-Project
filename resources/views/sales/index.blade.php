@@ -4,7 +4,7 @@
 
 @section('content')
 
-<link rel="stylesheet" href="{{ asset('css/sales.css') }}">
+<link rel="stylesheet" href="{{ asset('css/sales.css') }}?v=phase2">
 
 <div class="main-body">
 
@@ -28,7 +28,7 @@
     <div class="sales-summary">
         <div class="sales-card">
             <h5>Total Revenue</h5>
-            <p>${{ number_format($totalSales, 2) }}</p>
+            <p>₱{{ number_format($totalSales, 2) }}</p>
         </div>
         <div class="sales-card">
             <h5>Total Transactions</h5>
@@ -36,11 +36,11 @@
         </div>
         <div class="sales-card">
             <h5>Average Sale</h5>
-            <p>${{ number_format($averageSale, 2) }}</p>
+            <p>₱{{ number_format($averageSale, 2) }}</p>
         </div>
         <div class="sales-card">
             <h5>This Month</h5>
-            <p>${{ number_format($totalSales, 2) }}</p>
+            <p>₱{{ number_format($totalSales, 2) }}</p>
         </div>
     </div>
 
@@ -50,7 +50,7 @@
             <h5>All Sales</h5>
         </div>
 
-        <div class="sales-table-wrapper">
+        <div class="sales-table-wrapper" tabindex="0" role="region" aria-label="Sales table">
             <table class="sales-table" id="salesTable">
                 <thead>
                     <tr>
@@ -99,8 +99,8 @@
                             @endif
                         </td>
                         <td>{{ $sale->quantity_sold }}</td>
-                        <td>${{ number_format($sale->unit_price, 2) }}</td>
-                        <td><strong>${{ number_format($sale->total_amount, 2) }}</strong></td>
+                        <td>₱{{ number_format($sale->unit_price, 2) }}</td>
+                        <td><strong>₱{{ number_format($sale->total_amount, 2) }}</strong></td>
                         <td>
                             <span class="payment-badge payment-{{ $sale->payment_method }}">
                                 {{ ucfirst($sale->payment_method) }}
@@ -113,19 +113,21 @@
                         </td>
                         <td>{{ $sale->sale_date->format('M d, Y') }}</td>
                         <td class="sales-actions">
-                            <a href="{{ route('sales.show', $sale) }}" class="button button-view">View</a>
-                            <a href="{{ route('sales.edit', $sale) }}" class="button button-edit">Edit</a>
-                            <form action="{{ route('sales.destroy', $sale) }}" method="POST" class="inline-form">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="button button-delete"
-                                    onclick="return confirm('Are you sure you want to delete this sale?')">Delete</button>
-                            </form>
+                            <div class="row-actions">
+                                <a href="{{ route('sales.show', $sale) }}" class="button button-view">View</a>
+                                <a href="{{ route('sales.edit', $sale) }}" class="button button-edit">Edit</a>
+                                <form action="{{ route('sales.destroy', $sale) }}" method="POST" class="inline-form">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="button button-delete"
+                                        onclick="return confirm('Are you sure you want to delete this sale?')">Delete</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="10" class="text-center">
+                        <td colspan="10" class="text-center text-muted py-5">
                             No sales found. <a href="{{ route('sales.create') }}">Create the first sale</a>
                         </td>
                     </tr>
@@ -136,11 +138,11 @@
 
         <!-- Pagination -->
         <div class="sales-pagination">
-            {{ $sales->links() }}
+            {{ $sales->links('pagination::bootstrap-5') }}
         </div>
     </div>
 
 </div>
 
-<script src="{{ asset('js/custom.js') }}"></script>
+<script src="{{ asset('js/custom.js') }}?v=phase2"></script>
 @endsection
